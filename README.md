@@ -5,4 +5,4 @@ This Repo is liecnese under the GPL 3
  
 This is also may or may not be using apk package manger
 
-# you can help via PR to mantain these packages
+# you can help via PR to maintain these packages
