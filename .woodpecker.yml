@@ -1,0 +1,5 @@
+pipeline:
+  assert-pkginfo:
+    image: debian:unstable-slim
+    commands:
+      - bash ./assert-pkginfo.sh
