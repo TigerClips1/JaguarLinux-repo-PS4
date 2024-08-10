@@ -6,7 +6,7 @@
     "groups": ["core"],
     "url": "https://kernel.org",
     "license": ["GPL1,2,3"],
-    "depends": ["tar"],
+    "depends": ["tar", "python"],
     "optional_depends": [],
     "make_depends": [],
     "provides": ["linux-firmware"],
