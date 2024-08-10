@@ -24,12 +24,12 @@ SRC=("https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.gi
 # Prepare script
 function prepare() {
     cd "${WORKDIR}/${NAME}-${VERSION}linux-firmware-main"
-    make install-xz --ignore-duplicates
-    for unit in mec mec2 sdma sdma1 uvd vce pfp me ce; do
-		python3 resize_firmware.py /lib/firmware/amdgpu/${unit}.bin  17024 liverpool_${unit}.bin
-        python3 resize_firmware.py /lib/firmware/radeon/${unit}.bin  17024 liverpool_${unit}.bin
-        python3 resize_firmware.py /lib/firmware/radeon/${unit}.bin  17024 LIVERPOOL_${unit}.bin
-	done
+    ./copyfirmware.sh --zstd --ignore-duplicates  ${DESTDIR} /lib/firmware  
+     for unit in mec mec2 sdma sdma1 uvd vce pfp me ce; do
+	python3 resize_firmware.py amdgpu/kaveri_${unit}.bin  17024  /lib/firmware/amdgpu/liverpool_${unit}.bin
+        python3 resize_firmware.py radeon/kaveri_${unit}.bin  17024  /lib/firmware/radeon/liverpool_${unit}.bin
+        python3 resize_firmware.py radeon/kaveri_${unit}.bin  17024  /lib/firmware/radeon/LIVERPOOL_${unit}.bin
+     done
 
     return 0
 }
@@ -37,14 +37,14 @@ function prepare() {
 # Build script
 function build() {
     cd "${WORKDIR}/${NAME}-${VERSION}/build"
-    xz --compress --quiet --stdout --check=crc32 /lib/firmware/amdgpu/liverpool_*.bin
-    xz --compress --quiet --stdout --check=crc32 /lib/firmware/radeon/liverpool_*.bin
-    xz --compress --quiet --stdout --check=crc32 /lib/firmware/radeon/LIVERPOOL_*.bin
+    zstd --compress   /lib/firmware/amdgpu/liverpool_*.bin
+    zstd --compress   /lib/firmware/radeon/liverpool_*.bin
+    zstd --compress   /lib/firmware/radeon/LIVERPOOL_*.bin
     rm -rfv /lib/firmware/radeon/LIVERPOOL_*.bin
     rm -rfv /lib/firmware/radeon/liverpool_*.bin
     rm -rfv /lib/firmware/amdgpu/liverpool_*.bin
 
     return 0
 }
-
+clear
 printf ("DONE")
