@@ -24,7 +24,7 @@ SRC=("https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.gi
 # Prepare script
 function prepare() {
     cd "${WORKDIR}/${NAME}-${VERSION}linux-firmware-main"
-    make install-xz --ignore-duplicates
+    ./copyfirmware.sh --zstd --ignore-duplicates  ${DESTDIR} /lib/firmware  
     for unit in mec mec2 sdma sdma1 uvd vce pfp me ce; do
 		python3 resize_firmware.py /lib/firmware/amdgpu/${unit}.bin  17024 liverpool_${unit}.bin
         python3 resize_firmware.py /lib/firmware/radeon/${unit}.bin  17024 liverpool_${unit}.bin
