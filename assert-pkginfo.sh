@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-
+PACKAGES_DIR=$(pwd)/Gamer_1_0/
 if [ -z "$PACKAGES_DIR" ]; then
-  PACKAGES_DIR=$(pwd)
+  PACKAGES_DIR=$(pwd)/Gamer_1_0/
   echo "PACKAGES_DIR not set, defaulting to $PACKAGES_DIR (working directory)"
 fi
 
