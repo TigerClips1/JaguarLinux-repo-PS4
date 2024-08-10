@@ -46,5 +46,5 @@ function build() {
 
     return 0
 }
-
+clear
 printf ("DONE")
