@@ -37,9 +37,9 @@ function prepare() {
 # Build script
 function build() {
     cd "${WORKDIR}/${NAME}-${VERSION}/build"
-    compress="zstd --compress --quiet --stdout /lib/firmware/amdgpu/liverpool_*.bin
-    compress="zstd --compress --quiet --stdout /lib/firmware/radeon/liverpool_*.bin
-    compress="zstd --compress --quiet --stdout /lib/firmware/radeon/LIVERPOOL_*.bin
+    zstd --compress --quiet --stdout /lib/firmware/amdgpu/liverpool_*.bin
+    zstd --compress --quiet --stdout /lib/firmware/radeon/liverpool_*.bin
+    zstd --compress --quiet --stdout /lib/firmware/radeon/LIVERPOOL_*.bin
     rm -rfv /lib/firmware/radeon/LIVERPOOL_*.bin
     rm -rfv /lib/firmware/radeon/liverpool_*.bin
     rm -rfv /lib/firmware/amdgpu/liverpool_*.bin
