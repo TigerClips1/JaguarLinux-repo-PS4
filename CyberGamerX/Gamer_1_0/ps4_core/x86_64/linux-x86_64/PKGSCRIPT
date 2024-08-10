@@ -10,7 +10,7 @@ DESC="The linux kernel and the headers and modules"
 GRPS=("core")
 URL="https://github.com/TigerClips1"
 LICENSES=("GPL 2.0 and 3")
-DEPENDS=("coreutils", "flex","gcc", "g++", "libgcc", "kmod")
+DEPENDS=("coreutils", "flex","gcc", "g++", "libgcc", "kmod", "unzip")
 OPT_DEPENDS=("linux-firmware", "wireless-regdb")
 MK_DEPENDS=("texlive-latexextra", "python-yaml", "python-sphinx", "xz", "imagemagick", "graphviz", "tar", "perl", "pahole", "libelf", "gettext", "cpio", "bc")
 PROVIDES=("linux")
@@ -18,13 +18,16 @@ CONFLICTS=()
 REPLACES=()
 
 # Source information
-SRC=("https://mirror.fileplanet.com/lfs/pub/lfs/lfs-packages/12.1/gcc-${VERSION}/gcc-${VERSION}.tar.xz")
+SRC=("https://codeload.github.com/TigerClips1/JaguarLinux-ps4-x86_64-dist-kernel/zip/refs/heads/master")
 
 SUM_TYPE="md5sum"
-SUM=("e0e48554cc6e4f261d55ddee9ab69075")
+SUM=("1d9fe55e73fa26ef01d11e10cccb593b")
 
 # Prepare script
 function prepare() {
+    mv JaguarLinux-ps4-x86_64-dist-kernel.zip ${WORKDIR}/${NAME}-${VERSION}.zip
+    uznip ${WORKDIR}/${NAME}-${VERSION}.zip
+    mv JaguarLinux-ps4-x86_64-dist-kernel-master ${WORKDIR}/${NAME}-${VERSION}
     cd "${WORKDIR}/${NAME}-${VERSION}"
     make mrproper
     mv config .config

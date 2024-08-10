@@ -6,7 +6,7 @@
     "groups": ["core"],
     "url": "https://github.com/TigerClips1",
     "license": ["GPL1,2,3"],
-    "depends": ["coreutils", "flex","gcc", "g++", "libgcc", "kmod"],
+    "depends": ["coreutils", "flex","gcc", "g++", "libgcc", "kmod", "unzip"],
     "optional_depends": ["linux-firmware", "wireless-regdb"],
     "make_depends": ["texlive-latexextra", "python-yaml", "python-sphinx", "xz", "imagemagick", "graphviz", "tar", "perl", "pahole", "libelf", "gettext", "cpio", "bc"],
     "provides": ["linux"],
