@@ -26,9 +26,9 @@ function prepare() {
     cd "${WORKDIR}/${NAME}-${VERSION}linux-firmware-main"
     ./copyfirmware.sh --zstd --ignore-duplicates  ${DESTDIR} /lib/firmware  
      for unit in mec mec2 sdma sdma1 uvd vce pfp me ce; do
-	python3 resize_firmware.py /lib/firmware/amdgpu/kaveri_${unit}.bin  17024  /lib/firmware/amdgpu/liverpool_${unit}.bin
-        python3 resize_firmware.py /lib/firmware/radeon/kaveri_${unit}.bin  17024  /lib/firmware/radeon/liverpool_${unit}.bin
-        python3 resize_firmware.py /lib/firmware/radeon/kaveri_${unit}.bin  17024  /lib/firmware/radeon/LIVERPOOL_${unit}.bin
+	python3 resize_firmware.py amdgpu/kaveri_${unit}.bin  17024  /lib/firmware/amdgpu/liverpool_${unit}.bin
+        python3 resize_firmware.py radeon/kaveri_${unit}.bin  17024  /lib/firmware/radeon/liverpool_${unit}.bin
+        python3 resize_firmware.py radeon/kaveri_${unit}.bin  17024  /lib/firmware/radeon/LIVERPOOL_${unit}.bin
      done
 
     return 0
