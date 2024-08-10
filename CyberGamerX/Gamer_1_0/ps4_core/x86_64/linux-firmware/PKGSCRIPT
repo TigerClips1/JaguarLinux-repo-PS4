@@ -1,0 +1,50 @@
+#!/bin/sh
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <spongebob1966@proton.me>")
+
+# Package information
+NAME="linux-firmware"
+VERSION="latest"
+EPOCH=0
+DESC="The linux kernel and the headers and modules"
+GRPS=("core")
+URL="https://kernel.org"
+LICENSES=("GPL 2.0 and 3")
+DEPENDS=("tar", "python")
+OPT_DEPENDS=()
+MK_DEPENDS=()
+PROVIDES=("linux-firmware")
+CONFLICTS=()
+REPLACES=()
+
+# Source information
+SRC=("https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/snapshot/linux-firmware-main.tar.gz"
+      "https://raw.githubusercontent.com/fail0verflow/radeon-tools/master/f32/resize_firmware.py")
+
+# Prepare script
+function prepare() {
+    cd "${WORKDIR}/${NAME}-${VERSION}linux-firmware-main"
+    make install-xz --ignore-duplicates
+    for unit in mec mec2 sdma sdma1 uvd vce pfp me ce; do
+		python3 resize_firmware.py /lib/firmware/amdgpu/${unit}.bin  17024 liverpool_${unit}.bin
+        python3 resize_firmware.py /lib/firmware/radeon/${unit}.bin  17024 liverpool_${unit}.bin
+        python3 resize_firmware.py /lib/firmware/radeon/${unit}.bin  17024 LIVERPOOL_${unit}.bin
+	done
+
+    return 0
+}
+
+# Build script
+function build() {
+    cd "${WORKDIR}/${NAME}-${VERSION}/build"
+    xz --compress --quiet --stdout --check=crc32 /lib/firmware/amdgpu/liverpool_*.bin
+    xz --compress --quiet --stdout --check=crc32 /lib/firmware/radeon/liverpool_*.bin
+    xz --compress --quiet --stdout --check=crc32 /lib/firmware/radeon/LIVERPOOL_*.bin
+    rm -rfv /lib/firmware/radeon/LIVERPOOL_*.bin
+    rm -rfv /lib/firmware/radeon/liverpool_*.bin
+    rm -rfv /lib/firmware/amdgpu/liverpool_*.bin
+
+    return 0
+}
+
+printf ("DONE")
