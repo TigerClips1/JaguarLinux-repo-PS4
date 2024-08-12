@@ -1,0 +1,15 @@
+pkgbase = linux-firmware
+	pkgdesc = ps4linux-firmware
+	pkgver = latest
+	pkgrel = 1
+	url = https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/snapshot/linux-firmware-main.tar.gz
+	arch = any
+	license = GPL2
+	license = GPL3
+	license = custom
+	makedepends = git
+	makedepends = rdfind
+	options = !strip
+	options = !debug
+
+pkgname = ps4-linux-firmware

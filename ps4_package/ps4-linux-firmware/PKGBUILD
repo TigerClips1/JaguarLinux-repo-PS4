@@ -1,0 +1,61 @@
+# Maintainer: TigerClips1 <spongebob1966@proton.meo>
+
+pkgbase=linux-firmware-main
+pkgname=(ps4-linux-firmware)
+_tag=latest
+pkgver=latest
+pkgrel=1
+pkgdesc="Firmware files for ps4Linux"
+source=("https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/snapshot/linux-firmware-main.tar.gz"
+       "https://raw.githubusercontent.com/fail0verflow/radeon-tools/master/f32/resize_firmware.py")
+license=('GPL2' 'GPL3' 'custom')
+arch=('any')
+makedepends=('git' 'rdfind' 'python3')
+options=(!strip !debug)
+
+sha256sums=('SKIP'
+            'SKIP') 
+
+
+prepare() {  
+  for unit in mec mec2 sdma sdma1 uvd vce pfp me ce; do
+		python3  ../resize_firmware.py ${pkgbase}/amdgpu/kaveri_${unit}.bin 17024 ${pkgbase}/amdgpu/liverpool_${unit}.bin
+	done
+  
+  for unit2 in mec mec2 sdma sdma1 uvd vce pfp me ce; do
+    python3  ../resize_firmware.py ${pkgbase}/radeon/kaveri_${unit2}.bin 17024 ${pkgbase}/radeon/liverpool_${unit2}.bin
+	done
+
+  for unit3 in mec mec2 sdma sdma1 uvd vce pfp me ce; do
+    python3  ../resize_firmware.py ${pkgbase}/radeon/kaveri_${unit3}.bin 17024 ${pkgbase}/radeon/LIVERPOOL_${unit3}.bin
+	done
+
+}
+
+package_ps4-linux-firmware() {
+
+  cd ${pkgbase}
+
+  ZSTD_CLEVEL=19 make DESTDIR="${pkgdir}" FIRMWAREDIR=/usr/lib/firmware install-zst
+  
+  for driver in mec mec2 sdma sdma1 uvd vce pfp me ce; do
+    cp -arvf amdgpu/liverpool_${driver}.bin  ${pkgdir}/usr/lib/firmware/amdgpu/
+    cp -arvf radeon/liverpool_${driver}.bin  ${pkgdir}/usr/lib/firmware/radeon/
+    cp -arvf radeon/LIVERPOOL_${driver}.bin  ${pkgdir}/usr/lib/firmware/radeon/
+    zstd --compress --quiet ${pkgdir}/usr/lib/firmware/amdgpu/liverpool_${driver}.bin
+    zstd --compress --quiet ${pkgdir}/usr/lib/firmware/radeon/liverpool_${driver}.bin
+    zstd --compress --quiet ${pkgdir}/usr/lib/firmware/radeon/LIVERPOOL_${driver}.bin
+    rm -rfv ${pkgdir}/usr/lib/firmware/amdgpu/liverpool_${driver}.bin 
+    rm -rfv ${pkgdir}/usr/lib/firmware/radeon/liverpool_${driver}.bin 
+    rm -rfv ${pkgdir}/usr/lib/firmware/radeon/LIVERPOOL_${driver}.bin 
+  done
+  
+  install -Dt "${pkgdir}/usr/share/licenses/${pkgname}" -m644 LICEN*
+
+
+  cd "${pkgdir}"
+
+  # remove arm64 firmware https://bugs.archlinux.org/task/76583
+  rm usr/lib/firmware/mrvl/prestera/mvsw_prestera_fw_arm64-v4.1.img.zst
+
+}
