@@ -1,0 +1,487 @@
+# Maintainer: TigerClips1 <spognebob1966@proton.me>
+
+
+pkgbase=lib32-mesa
+pkgname=(
+  lib32-mesa-ps4
+  lib32-libva-mesa-driver-ps4
+  lib32-mesa-vdpau-ps4
+  lib32-opencl-clover-mesa-ps4
+  lib32-vulkan-intel-ps4
+  lib32-vulkan-mesa-layers-ps4
+  lib32-vulkan-radeon-ps4
+  lib32-vulkan-swrast-ps4
+  lib32-vulkan-virtio-ps4
+)
+pkgver=24.1.5
+pkgrel=2
+epoch=1
+pkgdesc="Open-source OpenGL drivers - 32-bit"
+url="https://www.mesa3d.org/"
+arch=(x86_64)
+license=("MIT AND BSD-3-Clause AND SGI-B-2.0")
+makedepends=(
+  lib32-clang
+  lib32-expat
+  lib32-gcc-libs
+  lib32-glibc
+  lib32-libdrm
+  lib32-libelf
+  lib32-libglvnd
+  lib32-libva
+  lib32-libvdpau
+  lib32-libx11
+  lib32-libxcb
+  lib32-libxext
+  lib32-libxfixes
+  lib32-libxml2
+  lib32-libxrandr
+  lib32-libxshmfence
+  lib32-libxxf86vm
+  lib32-llvm
+  lib32-llvm-libs
+  lib32-lm_sensors
+  lib32-rust-libs
+  lib32-spirv-llvm-translator
+  lib32-spirv-tools
+  lib32-systemd
+  lib32-vulkan-icd-loader
+  lib32-wayland
+  lib32-xcb-util-keysyms
+  lib32-zlib
+  lib32-zstd
+  lib32-libunwind
+  lib32-rust
+  # shared between mesa and lib32-mesa
+  cbindgen
+  clang
+  cmake
+  elfutils
+  glslang
+  libclc
+  meson
+  python-mako
+  python-packaging
+  python-ply
+  rust-bindgen
+  wayland-protocols
+  xorgproto
+)
+options=(
+  # GCC 14 LTO causes segfault in LLVM under si_llvm_optimize_module
+  # https://gitlab.freedesktop.org/mesa/mesa/-/issues/11140
+  #
+  # In general, upstream considers LTO to be broken until explicit notice.
+  !lto
+)
+source=(
+  "https://mesa.freedesktop.org/archive/mesa-$pkgver.tar.xz"
+  "https://raw.githubusercontent.com/Dr4kk3N/ps4-overlay/main/media-libs/mesa/files/mesa-ps4-24.1.0-r3.patch"
+   mesa-ps4-24.1.0-r3.patch
+)
+
+
+# Rust crates for NVK, used as Meson subprojects
+declare -A _crates=(
+   paste          1.0.14
+   proc-macro2    1.0.70
+   quote          1.0.33
+   syn            2.0.39
+   unicode-ident  1.0.12
+)
+
+for _crate in "${!_crates[@]}"; do
+  _ver="${_crates[$_crate]}"
+  source+=(
+    "$_crate-$_ver.tar.gz::https://crates.io/api/v1/crates/$_crate/$_ver/download"
+  )
+done
+
+b2sums=('SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP'
+        'SKIP')
+
+# https://docs.mesa3d.org/relnotes.html
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP')
+prepare() {
+  cd mesa-$pkgver
+
+  patch -Np1 -i ../mesa-ps4-24.1.0-r3.patch
+
+  # Include package release in version string so Chromium invalidates
+  # its GPU cache; otherwise it can cause pages to render incorrectly.
+  # https://bugs.launchpad.net/ubuntu/+source/chromium-browser/+bug/2020604
+  echo "$pkgver-arch$epoch.$pkgrel" >VERSION
+}
+
+build() {
+  local meson_options=(
+    --cross-file lib32
+    -D android-libbacktrace=disabled
+    -D b_ndebug=true
+    -D cpp_std=c++17 
+    -D dri3=enabled
+    -D egl=enabled 
+    -D gallium-drivers=r300,r600,radeonsi,virgl,svga,swrast,i915,iris,crocus,zink
+    -D gallium-extra-hud=true
+    -D gallium-nine=true
+    -D gallium-omx=disabled
+    -D gallium-opencl=icd
+    -D gallium-rusticl=false
+    -D gallium-va=enabled 
+    -D gallium-vdpau=enabled
+    -D gallium-xa=enabled 
+    -D gbm=enabled 
+    -D gles2=enabled 
+    -D glvnd=enabled 
+    -D gles1=disabled
+    -D glx=dri
+    -D intel-clc=enabled
+    -D intel-rt=disabled
+    -D libunwind=enabled
+    -D lmsensors=enabled 
+    -D shared-glapi=enabled 
+    -D llvm=enabled
+    -D microsoft-clc=disabled
+    -D osmesa=true
+    -D platforms=x11,wayland
+    -D valgrind=disabled
+    -D video-codecs=vc1dec,h264dec,h264enc,h265dec,h265enc
+    -D vulkan-drivers=amd,intel,intel_hasvk,swrast,virtio
+    -D vulkan-layers=device-select,intel-nullhw,overlay
+    -D tools=[]
+    -D zstd=enabled
+    --buildtype=plain
+    --wrap-mode=nofallback 
+    --prefix=/usr 
+    -D sysconfdir=/etc
+  )
+  export BINDGEN_EXTRA_CLANG_ARGS="-m32"
+
+  # Build only minimal debug info to reduce size
+  CFLAGS+=" -g1"
+  CXXFLAGS+=" -g1"
+
+  # Inject subproject packages
+  export MESON_PACKAGE_CACHE_DIR="$srcdir"
+
+  arch-meson mesa-$pkgver build "${meson_options[@]}"
+  meson compile -C build
+}
+
+_pick() {
+  local p="$1" f d; shift
+  for f; do
+    d="$srcdir/$p/${f#$pkgdir/}"
+    mkdir -p "$(dirname "$d")"
+    mv -v "$f" "$d"
+    rmdir -p --ignore-fail-on-non-empty "$(dirname "$f")"
+  done
+}
+
+package_lib32-mesa-ps4() {
+  depends=(
+    lib32-expat
+    lib32-gcc-libs
+    lib32-glibc
+    lib32-libdrm
+    lib32-libelf
+    lib32-libglvnd
+    lib32-libx11
+    lib32-libxcb
+    lib32-libxext
+    lib32-libxfixes
+    lib32-libxshmfence
+    lib32-libxxf86vm
+    lib32-llvm-libs
+    lib32-lm_sensors
+    lib32-wayland
+    lib32-zlib
+    lib32-zstd
+
+    mesa
+  )
+  optdepends=("opengl-man-pages: for the OpenGL API man pages")
+  provides=(
+    lib32-mesa-libgl
+    lib32-opengl-driver
+  )
+  conflicts=(lib32-mesa-libgl)
+  replaces=(lib32-mesa-libgl)
+
+  meson install -C build --destdir "$pkgdir"
+
+  (
+    local libdir=usr/lib32 icddir=usr/share/vulkan/icd.d
+
+    cd "$pkgdir"
+
+    _pick libva $libdir/dri/*_drv_video.so
+
+    _pick vdpau $libdir/vdpau
+
+    _pick clover $libdir/gallium-pipe
+    _pick clover $libdir/libMesaOpenCL*
+
+    _pick vkintel $icddir/intel_*.json
+    _pick vkintel $libdir/libvulkan_intel*.so
+
+    _pick vklayer $libdir/libVkLayer_*.so
+
+    _pick vkradeon $icddir/radeon_icd*.json
+    _pick vkradeon $libdir/libvulkan_radeon.so
+
+    _pick vkswrast $icddir/lvp_icd*.json
+    _pick vkswrast $libdir/libvulkan_lvp.so
+
+    _pick vkvirtio $icddir/virtio_icd*.json
+    _pick vkvirtio $libdir/libvulkan_virtio.so
+
+    rm -rv etc usr/{bin,include,share}
+
+    # indirect rendering
+    ln -sr $libdir/libGLX_{mesa,indirect}.so.0
+  )
+
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+
+package_lib32-libva-mesa-driver-ps4() {
+  pkgdesc="Open-source VA-API drivers"
+  depends=(
+    lib32-expat
+    lib32-gcc-libs
+    lib32-glibc
+    lib32-libdrm
+    lib32-libelf
+    lib32-libx11
+    lib32-libxcb
+    lib32-libxshmfence
+    lib32-llvm-libs
+    lib32-zlib
+    lib32-zstd
+
+    libva-mesa-driver
+  )
+  provides=(lib32-libva-driver)
+
+  mv libva/* "$pkgdir"
+
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+package_lib32-mesa-vdpau-ps4() {
+  pkgdesc="Open-source VDPAU drivers"
+  depends=(
+    lib32-expat
+    lib32-gcc-libs
+    lib32-glibc
+    lib32-libdrm
+    lib32-libelf
+    lib32-libx11
+    lib32-libxcb
+    lib32-libxshmfence
+    lib32-llvm-libs
+    lib32-zlib
+    lib32-zstd
+
+    mesa-vdpau
+  )
+  provides=(lib32-vdpau-driver)
+
+  mv vdpau/* "$pkgdir"
+
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+package_lib32-opencl-clover-mesa-ps4() {
+  pkgdesc="Open-source OpenCL drivers - Clover variant"
+    depends=(
+        lib32-clang
+        lib32-expat
+        lib32-gcc-libs
+        lib32-glibc
+        lib32-libdrm
+        lib32-libelf
+        lib32-llvm-libs
+        lib32-spirv-llvm-translator
+        lib32-spirv-tools
+        lib32-zlib
+        lib32-zstd
+
+        opencl-clover-mesa
+  )
+  optdepends=("opencl-headers: headers necessary for OpenCL development")
+  provides=(lib32-opencl-driver)
+  replaces=("lib32-opencl-mesa<=23.1.4-1")
+  conflicts=(lib32-opencl-mesa)
+
+  mv clover/* "$pkgdir"
+
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+
+package_vulkan-lib32-intel-ps4() {
+    pkgdesc="Open-source Vulkan driver for Intel GPUs - 32-bit"
+    depends=(
+        lib32-expat
+        lib32-gcc-libs
+        lib32-glibc
+        lib32-libdrm
+        lib32-libx11
+        lib32-libxcb
+        lib32-libxshmfence
+        lib32-systemd
+        lib32-vulkan-icd-loader
+        lib32-wayland
+        lib32-xcb-util-keysyms
+        lib32-zlib
+        lib32-zstd
+
+        vulkan-intel
+  )
+  optdepends=("lib32-vulkan-mesa-layers-ps4: additional vulkan layers")
+  provides=(lib32-vulkan-driver)
+
+
+  mv vkintel/* "$pkgdir"
+
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+package_lib32-vulkan-intel-ps4() {
+   pkgdesc="Mesa's Vulkan layers - 32-bit"
+   depends=(
+        lib32-gcc-libs
+        lib32-glibc
+        lib32-libdrm
+        lib32-libxcb
+        lib32-wayland
+
+        vulkan-mesa-layers-ps4
+  )
+  conflicts=(lib32-vulkan-mesa-layer)
+  replaces=(lib32-vulkan-mesa-layer)
+
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+package_lib32-vulkan-mesa-layers-ps4() {
+  pkgdesc="Mesa's Vulkan layers - 32-bit"
+  depends=(
+    lib32-gcc-libs
+    lib32-glibc
+    lib32-libdrm
+    lib32-libxcb
+    lib32-wayland
+
+    vulkan-mesa-layers-ps4
+  )
+  conflicts=(lib32-vulkan-mesa-layer)
+  replaces=(lib32-vulkan-mesa-layer)
+
+  mv vklayer/* "$pkgdir"
+
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+package_lib32-vulkan-radeon-ps4() {
+   pkgdesc="Open-source Vulkan driver for AMD GPUs - 32-bit"
+    depends=(
+        lib32-expat
+        lib32-gcc-libs
+        lib32-glibc
+        lib32-libdrm
+        lib32-libelf
+        lib32-libx11
+        lib32-libxcb
+        lib32-libxshmfence
+        lib32-llvm-libs
+        lib32-systemd
+        lib32-vulkan-icd-loader
+        lib32-wayland
+        lib32-xcb-util-keysyms
+        lib32-zlib
+        lib32-zstd
+
+        vulkan-radeon
+  )
+  optdepends=("lib32-vulkan-mesa-layers-ps4: additional vulkan layers")
+  provides=(lib32-vulkan-driver)
+
+  mv vkradeon/* "$pkgdir"
+
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+package_lib32-vulkan-swrast-ps4() {
+  pkgdesc="Open-source Vulkan driver for CPUs (Software Rasterizer) - 32-bit"
+    depends=(
+        lib32-expat
+        lib32-gcc-libs
+        lib32-glibc
+        lib32-libdrm
+        lib32-libx11
+        lib32-libxcb
+        lib32-libxshmfence
+        lib32-llvm-libs
+        lib32-systemd
+        lib32-vulkan-icd-loader
+        lib32-wayland
+        lib32-xcb-util-keysyms
+        lib32-zlib
+        lib32-zstd
+
+        vulkan-swrast
+  )
+  optdepends=("lib32-vulkan-mesa-layers-ps4: additional vulkan layers")
+  conflicts=(lib32-vulkan-mesa)
+  replaces=(lib32-vulkan-mesa)
+  provides=(lib32-vulkan-driver)
+
+  mv vkswrast/* "$pkgdir"
+
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}
+
+package_lib32-vulkan-virtio-ps4() {
+  pkgdesc="Open-source Vulkan driver for Virtio-GPU (Venus) - 32-bit"
+    depends=(
+        lib32-expat
+        lib32-gcc-libs
+        lib32-glibc
+        lib32-libdrm
+        lib32-libx11
+        lib32-libxcb
+        lib32-libxshmfence
+        lib32-systemd
+        lib32-vulkan-icd-loader
+        lib32-wayland
+        lib32-xcb-util-keysyms
+        lib32-zlib
+        lib32-zstd
+
+        vulkan-virtio
+  )
+  optdepends=("lib32-vulkan-mesa-layers-ps4: additional vulkan layers")
+  provides=(lib32-vulkan-driver)
+
+
+  mv vkvirtio/* "$pkgdir"
+
+  install -Dm644 mesa-$pkgver/docs/license.rst -t "$pkgdir/usr/share/licenses/$pkgname"
+}

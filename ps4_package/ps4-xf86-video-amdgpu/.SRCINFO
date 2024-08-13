@@ -1,0 +1,25 @@
+pkgbase = ps4-xf86-video-amdgpu
+	pkgdesc = X.org amdgpu video driver
+	pkgver = 23.0.0
+	pkgrel = 2
+	url = https://xorg.freedesktop.org/
+	arch = x86_64
+	groups = xorg-drivers
+	license = MIT
+	makedepends = xorg-server-devel
+	makedepends = systemd
+	makedepends = X-ABI-VIDEODRV_VERSION=25.2
+	depends = systemd-libs
+	depends = mesa
+	depends = libdrm
+	depends = glibc
+	conflicts = xorg-server<1.20.0
+	conflicts = X-ABI-VIDEODRV_VERSION<25
+	conflicts = X-ABI-VIDEODRV_VERSION>=26
+	source = https://xorg.freedesktop.org//releases/individual/driver/xf86-video-amdgpu-23.0.0.tar.xz
+	source = https://xorg.freedesktop.org//releases/individual/driver/xf86-video-amdgpu-23.0.0.tar.xz
+    source = xf86-video-amdgpu-9999.patch
+	sha512sums = SKIP
+	sha512sums = SKIP
+
+pkgname = ps4-xf86-video-amdgpu
