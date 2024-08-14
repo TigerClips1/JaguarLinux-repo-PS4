@@ -1,0 +1,37 @@
+pkgbase = lib32-llvm
+	pkgver = 18.1.8
+	pkgrel = 1
+	url = https://llvm.org/
+	arch = x86_64
+	license = custom:Apache 2.0 with LLVM Exception
+	makedepends = cmake
+	makedepends = ninja
+	makedepends = lib32-libffi
+	makedepends = lib32-zlib
+	makedepends = lib32-zstd
+	makedepends = python
+	makedepends = gcc-multilib
+	makedepends = lib32-libxml2
+	options = staticlibs
+	options = !lto
+	source = https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/llvm-18.1.8.src.tar.xz
+	source = https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/cmake-18.1.8.src.tar.xz
+	source = https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/third-party-18.1.8.src.tar.xz
+	
+	sha256sums = SKIP
+	sha256sums = SKIP
+	sha256sums = SKIP
+	
+pkgname = lib32-llvm
+	pkgdesc = Compiler infrastructure (32-bit)
+	depends = lib32-llvm-libs
+	depends = llvm
+
+pkgname = lib32-llvm-libs
+	pkgdesc = LLVM runtime libraries (32-bit)
+	depends = lib32-libffi
+	depends = lib32-zlib
+	depends = lib32-zstd
+	depends = lib32-ncurses
+	depends = lib32-libxml2
+	depends = lib32-gcc-libs
