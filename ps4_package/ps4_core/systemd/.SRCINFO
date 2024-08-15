@@ -1,0 +1,11 @@
+pkgbase = systemd
+    pkgdesc = The systemd package contains programs for controlling the startup, running, and shutdown of the system. 
+    pkgver = 255
+    pkgrel = 1
+    url = https://www.linuxfromscratch.org/lfs/downloads/stable-systemd/LFS-BOOK-12.1-systemd-NOCHUNKS.html#ch-system-man-pages
+    arch = x86_64
+    license = GPL
+    source = https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/systemd-255.tar.gz
+    source = https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/systemd-255-upstream_fixes-1.patch
+    source = https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/systemd-man-pages-255.tar.xz
+pkgname = zstd

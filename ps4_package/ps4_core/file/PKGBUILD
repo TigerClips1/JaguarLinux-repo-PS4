@@ -26,5 +26,5 @@ check() {
 
 package() {
    cd $pkgname-$pkgver
-   make DISTDIR=$pkgdir install
+   make DESTDIR=$pkgdir install
 }

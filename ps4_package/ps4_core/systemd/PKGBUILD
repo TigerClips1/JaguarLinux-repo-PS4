@@ -1,0 +1,65 @@
+#Mantainer TigerClips1 <TigerClips1@ps4repo.site>
+pkgname=systemd
+pkgver=255
+pkgrel=1
+pkgdesc="The systemd package contains programs for controlling the startup, running, and shutdown of the system."
+arch=("x86_64")
+url="https://www.linuxfromscratch.org/lfs/downloads/stable-systemd/LFS-BOOK-12.1-systemd-NOCHUNKS.html#ch-system-man-pages"
+license=("GPL")
+
+source=("https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/systemd-255.tar.gz"
+         "https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/systemd-255-upstream_fixes-1.patch"
+         "https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/systemd-man-pages-255.tar.xz"
+       )
+
+sha256sums=("SKIP"
+            "SKIP"
+            "SKIP"
+           )
+
+
+prepare() {
+    cd $pkgname-$pkgver
+    sed -i -e 's/GROUP="render"/GROUP="video"/' \
+       -e 's/GROUP="sgx", //' rules.d/50-udev-default.rules.in
+    patch -Np1 -i ../systemd-255-upstream_fixes-1.patch
+    
+    mkdir -p build
+    cd build
+
+    meson setup \
+        --prefix=/usr                 \
+        --buildtype=release           \
+        -Ddefault-dnssec=no           \
+        -Dfirstboot=false             \
+        -Dinstall-tests=false         \
+        -Dldconfig=false              \
+        -Dsysusers=false              \
+        -Drpmmacrosdir=no             \
+        -Dhomed=disabled              \
+        -Duserdb=false                \
+        -Dman=disabled                \
+        -Dmode=release                \
+        -Dpamconfdir=no               \
+        -Ddev-kvm-mode=0660           \
+        -Dnobody-group=nogroup        \
+        -Dsysupdate=disabled          \
+        -Dukify=disabled              \
+        -Ddocdir=/usr/share/doc/systemd-255 \
+        ..
+}
+
+build() {
+    ninja
+    tar -xf ../../systemd-man-pages-255.tar.xz \
+    --no-same-owner --strip-components=1   \
+    -C $pkgdir/usr/share/man
+}
+
+
+package() {
+   cd $pkgname-$pkgver
+   ninja DESTDIR=$pkgdir install
+   systemd-machine-id-setup
+   systemctl preset-all
+}
