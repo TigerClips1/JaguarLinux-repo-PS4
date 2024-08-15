@@ -1,0 +1,63 @@
+#Mantainer TigerClips1 <TigerClips1@ps4repo.site>
+pkgname=glibc
+pkgver=2.39
+pkgrel=1
+pkgdesc="The Glibc package contains the main C library. This library provides the basic routines for allocating memory, searching directories, opening and closing files, reading and writing files, string handling, pattern matching, arithmetic, and so on."
+arch=("x86_64")
+url="https://www.linuxfromscratch.org/lfs/downloads/stable-systemd/LFS-BOOK-12.1-systemd-NOCHUNKS.html#ch-system-man-pages"
+license=("GPL3")
+makedepends=(git gd lib32-gcc-libs python)
+options=(staticlibs !lto)
+
+
+source=("https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/glibc-2.39.tar.xz"
+         "https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/glibc-2.39-fhs-1.patch"
+         "https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/tzdata2024a.tar.gz"
+          glibcinstall.sh
+       )
+
+sha256sums=("SKIP"
+            "SKIP"
+            "SKIP"
+            "SKIP"
+           )
+
+prepare() {
+    rm -fv /usr/sbin/nscd
+    systemctl disable --now nscd
+    cd $pkgname-$pkgver
+    patch -Np1 -i ../glibc-2.39-fhs-1.patch
+    mkdir -v build
+    cd build
+    echo "rootsbindir=/usr/sbin" > configparms
+    ../configure --prefix=/usr                            \
+             --disable-werror                         \
+             --enable-kernel=4.19                     \
+             --enable-stack-protector=strong          \
+             --disable-nscd                           \
+             libc_cv_slibdir=/usr/lib
+}
+build() {
+    make
+}
+
+check() {
+    cd $pkgname-$pkgver/build
+    make check
+    touch $pkgdir/etc/ld.so.conf
+    sed '$pkgdir/test-installation/s@$(PERL)@echo not running@' -i ../Makefile
+    grep "Timed out" -l $(find -name \*.out)
+}
+
+
+package() {
+    cd $pkgname-$pkgver/build
+    make DESTDIR=$pkgdir/dest install
+    install -vm755 dest/usr/lib/*.so.* /usr/lib
+    make localedata/install-locales
+    sed '$pkgdir/RTLDLIST=/s@$pkgdir/usr@@g' -i $pkgdir/usr/bin/ldd
+}
+
+postinstall() {
+    bash ./glibcinstall.sh
+}

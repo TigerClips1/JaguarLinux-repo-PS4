@@ -1,0 +1,12 @@
+pkgbase = bzip2
+    pkgdesc =  The Bzip2 package contains programs for compressing and decompressing files. Compressing text files with bzip2 yields a much better compression percentage than with the traditional gzip.
+    pkgver = 1.0.8
+    pkgrel = 1
+    url = https://www.linuxfromscratch.org/lfs/downloads/stable-systemd/LFS-BOOK-12.1-systemd-NOCHUNKS.html#ch-system-man-pages
+    arch = x86_64
+    license = GPL
+    source = https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/bzip2-1.0.8.tar.gz
+    source = https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/bzip2-1.0.8-install_docs-1.patch
+    sha256sums = SKIP
+    sha256sums = SKIP
+pkgname = bzip2

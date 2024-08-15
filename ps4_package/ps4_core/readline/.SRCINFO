@@ -1,0 +1,9 @@
+pkgbase = readline
+    pkgdesc = The Readline package is a set of libraries that offer command-line editing and history capabilities. 
+    pkgrel = 1
+    url = https://www.linuxfromscratch.org/lfs/downloads/stable-systemd/LFS-BOOK-12.1-systemd-NOCHUNKS.html#ch-system-man-pages
+    arch = x86_64
+    license = GPL
+    source = https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/readline-8.2.tar.gz
+    source = https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/readline-8.2-upstream_fixes-3.patch
+pkgname = readline

@@ -1,0 +1,17 @@
+#Mantainer TigerClips1 <TigerClips1@ps4repo.site>
+pkgname=iana-etc
+pkgver=20240125 
+pkgrel=1
+pkgdesc="The Iana-Etc package provides data for network services and protocols."
+arch=("any")
+url="https://www.linuxfromscratch.org/lfs/downloads/stable-systemd/LFS-BOOK-12.1-systemd-NOCHUNKS.html#ch-system-man-pages"
+license=("GPL3")
+dpends=("coreutils")
+
+source=("https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/iana-etc-20240125.tar.gz")
+
+sha256sums=("SKIP")
+
+package() {
+    cp services protocols ${pkgdir}/etc
+}

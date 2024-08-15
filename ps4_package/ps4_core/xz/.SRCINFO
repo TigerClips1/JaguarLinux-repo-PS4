@@ -1,0 +1,10 @@
+pkgbase = xz
+    pkgdesc =   The Xz package contains programs for compressing and decompressing files. It provides capabilities for the lzma and the newer xz compression formats. Compressing text files with xz yields a better compression percentage than with the traditional gzip or bzip2 commands. 
+    pkgver = 5.4.6
+    pkgrel = 1
+    url = https://www.linuxfromscratch.org/lfs/downloads/stable-systemd/LFS-BOOK-12.1-systemd-NOCHUNKS.html#ch-system-man-pages
+    arch = x86_64
+    license = GPL
+    source = https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/xz-5.4.6.tar.xz
+    sha256sums = SKIP
+pkgname = xz

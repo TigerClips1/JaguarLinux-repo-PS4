@@ -1,0 +1,26 @@
+#Mantainer TigerClips1 <TigerClips1@ps4repo.site>
+pkgname=zstd
+pkgver=1.5.5
+pkgrel=1
+pkgdesc="Zstandard is a real-time compression algorithm, providing high compression ratios. It offers a very wide range of compression / speed trade-offs, while being backed by a very fast decoder."
+arch=("x86_64")
+url="https://www.linuxfromscratch.org/lfs/downloads/stable-systemd/LFS-BOOK-12.1-systemd-NOCHUNKS.html#ch-system-man-pages"
+license=("GPL")
+
+source=("https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/zstd-1.5.5.tar.gz")
+
+sha256sums=("SKIP")
+
+build() {
+    make prefix=/usr
+}
+
+check() {
+    make check
+}
+
+package() {
+   cd $pkgname-$pkgver
+   make prefix=$pkgdir/usr install
+   rm -v $pkgdir/usr/lib/libzstd.a
+}
