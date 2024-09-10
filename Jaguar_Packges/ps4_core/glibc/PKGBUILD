@@ -1,0 +1,65 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="glibc"
+VERSION="2.40"
+UPSTREAM=1
+DESC=" The Glibc package contains the main C library. This library provides the basic routines for allocating memory, searching directories, opening and closing files, reading and writing files, string handling, pattern matching, arithmetic, and so on."
+GRPS=("core")
+URL="https://www.gnu.org"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/glibc-2.40.tar.xz
+     http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/tzdata2024a.tar.gz"
+    )
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    patch -Np1 -i ../glibc-2.40-fhs-1.patch
+    mkdir -v build
+    cd       build
+    echo "rootsbindir=/usr/sbin" > configparms
+    ../configure --prefix=/usr                            \
+             --disable-werror                         \
+             --enable-kernel=4.19                     \
+             --enable-stack-protector=strong          \
+             --disable-nscd                           \
+             libc_cv_slibdir=/usr/lib
+    
+    return 0
+}
+
+# Build script
+function build() {
+    cd $WORKDIR/$NAME-$VERSION/build
+    make 
+    
+    return 0
+}
+
+function check() {
+    cd $WORKDIR/$NAME-$VERSION/build
+    make check
+    grep "Timed out" $(find -name \*.out)
+    return 0
+} 
+
+# Post build script
+function postbuild() {
+   cd $WORKDIR/$NAME-$VERSION/build
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr/etc
+   mkdir -pv ${BUILD_DATA_ROOT}/etc/ld.so.conf.d
+   cp -v ../../ld.so.conf  ${BUILD_DATA_ROOT}/usr/etc
+   sed '/test-installation/s@$(PERL)@echo not running@' -i ../Makefile
+   make  DESTDIR=${BUILD_DATA_ROOT}/usr install
+   sed '/RTLDLIST=/s@/usr@@g' -i ${BUILD_DATA_ROOT}/usr/bin/ldd
+   make localedata/install-locales
+   cp -v ../../nsswitch.conf ${BUILD_DATA_ROOT}/usr/etc
+   bash ../../setup.sh
+   return 0
+}

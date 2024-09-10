@@ -1,0 +1,49 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="zlib"
+VERSION="1.3.1"
+UPSTREAM=1
+DESC="The Zlib package contains compression and decompression routines used by some programs."
+GRPS=("core")
+URL="https://www.zlib.net/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/zlib-1.3.1.tar.gz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    ./configure --prefix=/usr
+    
+    return 0
+}
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    make 
+    
+    return 0
+}
+
+function check() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    make check
+
+    return 0
+} 
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr
+   make  DESTDIR=${BUILD_DATA_ROOT}/usr install
+   rm -fv ${BUILD_DATA_ROOT}/usr/lib/libz.a
+
+   return 0
+}

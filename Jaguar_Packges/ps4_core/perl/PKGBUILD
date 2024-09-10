@@ -1,0 +1,62 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="perl"
+VERSION="5.40.0"
+UPSTREAM=1
+DESC="The Perl package contains the Practical Extraction and Report Language."
+GRPS=("core")
+URL="https://www.perl.org/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/perl-5.40.0.tar.xz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    export BUILD_ZLIB=False
+    export BUILD_BZIP2=0
+    sh Configure -des                                          \
+             -D prefix=/usr                                \
+             -D vendorprefix=/usr                          \
+             -D privlib=/usr/lib/perl5/5.40/core_perl      \
+             -D archlib=/usr/lib/perl5/5.40/core_perl      \
+             -D sitelib=/usr/lib/perl5/5.40/site_perl      \
+             -D sitearch=/usr/lib/perl5/5.40/site_perl     \
+             -D vendorlib=/usr/lib/perl5/5.40/vendor_perl  \
+             -D vendorarch=/usr/lib/perl5/5.40/vendor_perl \
+             -D man1dir=/usr/share/man/man1                \
+             -D man3dir=/usr/share/man/man3                \
+             -D pager="/usr/bin/less -isR"                 \
+             -D useshrplib                                 \
+             -D usethreads
+    
+    return 0
+}
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+
+    make
+
+    return 0
+}
+
+function check() {
+    TEST_JOBS=$(nproc) make test_harness
+}
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr
+   make  DESTDIR=${BUILD_DATA_ROOT}/usr install
+   unset BUILD_ZLIB BUILD_BZIP2
+
+    return 0
+}

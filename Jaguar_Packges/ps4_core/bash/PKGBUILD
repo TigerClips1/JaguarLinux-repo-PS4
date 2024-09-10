@@ -1,0 +1,51 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="bash"
+VERSION="5.2.32"
+UPSTREAM=1
+DESC=" The Bash package contains the Bourne-Again Shell."
+GRPS=("core")
+URL="https://www.gnu.org/software/bash/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/bash-5.2.32.tar.gz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    ./configure --prefix=/usr             \
+            --without-bash-malloc     \
+            --with-installed-readline \
+            bash_cv_strtold_broken=no \
+            --docdir=/usr/share/doc/bash-5.2.32
+
+    return 0
+}
+
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    make
+    return 0
+}
+
+function check() {
+    return 0
+}
+
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/bin
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
+    make DESTDIR=${BUILD_DATA_ROOT}/usr install
+    exec /usr/bin/bash --login
+    return 0
+}

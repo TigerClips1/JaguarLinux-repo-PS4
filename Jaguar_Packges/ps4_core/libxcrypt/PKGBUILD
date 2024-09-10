@@ -1,0 +1,53 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="libxcrypt"
+VERSION="4.4.36"
+UPSTREAM=1
+DESC=" The Libxcrypt package contains a modern library for one-way hashing of passwords."
+GRPS=("core")
+URL="https://github.com/besser82/libxcrypt/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/libxcrypt-4.4.36.tar.xz")
+
+
+# Prepare script
+function prepare() {
+    cd $WORKDIR/$NAME-$VERSION
+    ./configure --prefix=/usr                \
+            --enable-hashes=strong,glibc \
+            --enable-obsolete-api=glibc  \
+            --disable-static             \
+            --disable-failure-tokens
+        
+    return 0
+}
+
+# Build script
+function build() {
+    cd $WORKDIR/$NAME-$VERSION
+    make
+
+    return 0
+}
+
+function check() {
+    cd $WORKDIR/$NAME-$VERSION
+    make check
+    return 0
+} 
+
+# Post build script
+function postbuild() {
+   cd $WORKDIR/$NAME-$VERSION
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr
+
+   make DESTDIR=${BUILD_DATA_ROOT}/usr install
+   cp -av --remove-destination .libs/libcrypt.so.1* ${BUILD_DATA_ROOT}/usr/lib
+
+   return 0
+}

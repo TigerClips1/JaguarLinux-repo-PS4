@@ -1,0 +1,46 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="xml-parser"
+VERSION="2.47"
+UPSTREAM=1
+DESC="The XML::Parser module is a Perl interface to James Clark's XML parser, Expat."
+GRPS=("core")
+URL="https://github.com/libexpat/libexpat"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/XML-Parser-2.47.tar.gz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    perl Makefile.PL
+    
+    return 0
+}
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+
+    make
+
+    return 0
+}
+
+function check() {
+    make test
+}
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr
+   make  DESTDIR=${BUILD_DATA_ROOT}/usr install
+
+    return 0
+}

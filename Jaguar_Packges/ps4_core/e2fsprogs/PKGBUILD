@@ -1,0 +1,61 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="e2fsprogs"
+VERSION="1.47.1"
+UPSTREAM=1
+DESC="The E2fsprogs package contains the utilities for handling the ext2 file system. It also supports the ext3 and ext4 journaling file systems."
+GRPS=("core")
+URL="https://e2fsprogs.sourceforge.net/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/util-linux-2.40.2.tar.xz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    mkdir -v build
+    cd       build
+    ../configure --prefix=/usr           \
+             --sysconfdir=/etc       \
+             --enable-elf-shlibs     \
+             --disable-libblkid      \
+             --disable-libuuid       \
+             --disable-uuidd         \
+             --disable-fsck
+    
+    return 0
+}
+
+# Build script
+function build() {
+    cd $WORKDIR/$NAME-$VERSION/build
+
+    make
+
+    return 0
+}
+
+function check() {
+    cd $WORKDIR/$NAME-$VERSION/build
+    make check
+}
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr/etc
+   make  DESTDIR=${BUILD_DATA_ROOT}/usr install
+   rm -fv ${BUILD_DATA_ROOT}/usr/lib/{libcom_err,libe2p,libext2fs,libss}.a
+   gunzip -v /usr/share/info/libext2fs.info.gz
+   install-info --dir-file=/usr/share/info/dir ${BUILD_DATA_ROOT}/usr/share/info/libext2fs.info
+   makeinfo -o      doc/com_err.info ../lib/et/com_err.texinfo
+   install -v -m644 doc/com_err.info ${BUILD_DATA_ROOT}/usr/share/info
+   install-info --dir-file=/usr/share/info/dir ${BUILD_DATA_ROOT}/usr/share/info/com_err.info
+   sed 's/metadata_csum_seed,//' -i ${BUILD_DATA_ROOT}/etc/mke2fs.conf
+   return 0
+}

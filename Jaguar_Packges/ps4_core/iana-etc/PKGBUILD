@@ -1,0 +1,35 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="iana-etc"
+VERSION="20240806"
+UPSTREAM=1
+DESC=" The Iana-Etc package provides data for network services and protocols. "
+GRPS=("core")
+URL="https://www.iana.org/protocols"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/iana-etc-20240806.tar.gz")
+
+
+# Prepare script
+function prepare() {
+    return 0
+}
+
+# Build script
+function build() {
+    return 0
+}
+
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr/etc
+   cp services protocols ${BUILD_DATA_ROOT}/usr/etc
+    return 0
+}

@@ -1,0 +1,54 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="ninja"
+VERSION="1.12.1 "
+UPSTREAM=1
+DESC="Ninja is a small build system with a focus on speed."
+GRPS=("core")
+URL="https://ninja-build.org/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/ninja-1.12.1.tar.gz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"    
+    export NINJAJOBS=4
+    sed -i '/int Guess/a \
+    int   j = 0;\
+    char* jobs = getenv( "NINJAJOBS" );\
+    if ( jobs != NULL ) j = atoi( jobs );\
+    if ( j > 0 ) return j;\
+    ' src/ninja.cc
+    return 0
+}
+
+function check() {
+    return 0
+}
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    python3 configure.py --bootstrap
+
+    return 0
+}
+
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/bin
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
+    install -vm755 ninja ${BUILD_DATA_ROOT}/usr/bin/
+    install -vDm644 misc/bash-completion ${BUILD_DATA_ROOT}/usr/share/bash-completion/completions/ninja
+    install -vDm644 misc/zsh-completion  ${BUILD_DATA_ROOT}/usr/share/zsh/site-functions/_ninja
+
+    return 0
+}

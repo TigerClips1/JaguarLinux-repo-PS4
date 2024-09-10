@@ -1,0 +1,50 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="elfutils"
+VERSION="0.191"
+UPSTREAM=1
+DESC="Libelf is a library for handling ELF (Executable and Linkable Format) files."
+GRPS=("core")
+URL="https://sourceware.org/elfutils/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/elfutils-0.191.tar.bz2")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    ./configure --prefix=/usr                \
+            --disable-debuginfod         \
+            --enable-libdebuginfod=dummy
+    
+    return 0
+}
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+
+    make
+
+    return 0
+}
+
+function check() {
+    make check
+    return 0
+}
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr
+   make -C libelf DESTDIR=${BUILD_DATA_ROOT}/usr install
+   install -vm644 config/libelf.pc ${BUILD_DATA_ROOT}/usr/lib/pkgconfig
+   rm -v ${BUILD_DATA_ROOT}/usr/lib/libelf.a
+    return 0
+}

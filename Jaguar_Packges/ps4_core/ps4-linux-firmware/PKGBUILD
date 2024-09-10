@@ -1,0 +1,58 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="ps4-linux-firmware"
+VERSION="20240811"
+UPSTREAM=1
+DESC="Firmware files for ps4Linux"
+GRPS=("core")
+URL="https://git.kernel.org"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/snapshot/linux-firmware-20240811.tar.gz"
+    "https://raw.githubusercontent.com/fail0verflow/radeon-tools/master/f32/resize_firmware.py")
+
+
+# Prepare script
+function prepare() {
+    for unit in mec mec2 sdma sdma1 uvd vce pfp me ce; do
+		python3  ../resize_firmware.py $WORKDIR/$NAME-$VERSION/amdgpu/kaveri_${unit}.bin 17024 $WORKDIR/$NAME-$VERSION/amdgpu/liverpool_${unit}.bin
+	done
+  
+    for unit2 in mec mec2 sdma sdma1 uvd vce pfp me ce; do
+        python3  ../resize_firmware.py $WORKDIR/$NAME-$VERSION/radeon/kaveri_${unit2}.bin 17024 $WORKDIR/$NAME-$VERSION/radeon/liverpool_${unit2}.bin
+    done
+
+    for unit3 in mec mec2 sdma sdma1 uvd vce pfp me ce; do
+        python3  ../resize_firmware.py $WORKDIR/$NAME-$VERSION/radeon/kaveri_${unit3}.bin 17024 $WORKDIR/$NAME-$VERSION/radeon/LIVERPOOL_${unit3}.bin
+	done
+    
+    return 0
+}
+
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+     ZSTD_CLEVEL=19 make DESTDIR="$WORKDIR/$NAME-$VERSION" FIRMWAREDIR=/usr/lib/firmware install-zst
+  
+  for driver in mec mec2 sdma sdma1 uvd vce pfp me ce; do
+    cp -arvf amdgpu/liverpool_${driver}.bin  ${BUILD_DATA_ROOT}/usr/lib/firmware/amdgpu/
+    cp -arvf radeon/liverpool_${driver}.bin  ${BUILD_DATA_ROOT}/usr/lib/firmware/radeon/
+    cp -arvf radeon/LIVERPOOL_${driver}.bin  ${BUILD_DATA_ROOT}/usr/lib/firmware/radeon/
+    zstd --compress --quiet ${BUILD_DATA_ROOT}/usr/lib/firmware/amdgpu/liverpool_${driver}.bin
+    zstd --compress --quiet ${BUILD_DATA_ROOT}/usr/lib/firmware/radeon/liverpool_${driver}.bin
+    zstd --compress --quiet ${BUILD_DATA_ROOT}/usr/lib/firmware/radeon/LIVERPOOL_${driver}.bin
+    rm -rfv ${BUILD_DATA_ROOT}/usr/lib/firmware/amdgpu/liverpool_${driver}.bin 
+    rm -rfv ${BUILD_DATA_ROOT}/usr/lib/firmware/radeon/liverpool_${driver}.bin 
+    rm -rfv ${BUILD_DATA_ROOT}/usr/lib/firmware/radeon/LIVERPOOL_${driver}.bin 
+  done
+  
+  install -Dt "${BUILD_DATA_ROOT}/usr/share/licenses/${NAME}" -m644 LICEN*
+  rm ${BUILD_DATA_ROOT}usr/lib/firmware/mrvl/prestera/mvsw_prestera_fw_arm64-v4.1.img.zst
+
+    return 0
+}

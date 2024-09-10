@@ -1,0 +1,52 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="mpfr"
+VERSION="4.2.1"
+UPSTREAM=1
+DESC="The MPFR package contains functions for multiple precision math."
+GRPS=("core")
+URL="https://www.mpfr.org/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/mpfr-4.2.1.tar.xz")
+
+
+# Prepare script
+function prepare() {
+    cd $WORKDIR/$NAME-$VERSION
+   ./configure --prefix=/usr        \
+            --disable-static     \
+            --enable-thread-safe \
+            --docdir=/usr/share/doc/mpfr-4.2.1
+    return 0
+}
+
+# Build script
+function build() {
+    cd $WORKDIR/$NAME-$VERSION
+    make 
+    make html
+
+    return 0
+}
+
+function check() {
+    cd $WORKDIR/$NAME-$VERSION
+    make check
+    return 0
+} 
+
+# Post build script
+function postbuild() {
+   cd $WORKDIR/$NAME-$VERSION
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr
+
+   make DESTDIR=${BUILD_DATA_ROOT}/usr install
+   make DESTDIR=${BUILD_DATA_ROOT}/usr install html
+
+   return 0
+}

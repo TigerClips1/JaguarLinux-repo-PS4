@@ -1,0 +1,52 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="openssl"
+VERSION="3.3.1"
+UPSTREAM=1
+DESC="The OpenSSL package contains management tools and libraries relating to cryptography. These are useful for providing cryptographic functions to other packages, such as OpenSSH, email applications, and web browsers (for accessing HTTPS sites)."
+GRPS=("core")
+URL="https://openssl.org/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/openssl-3.3.1.tar.gz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    ./config --prefix=/usr         \
+         --openssldir=/etc/ssl \
+         --libdir=lib          \
+         shared                \
+         zlib-dynamic
+    
+    return 0
+}
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+
+    make
+
+    return 0
+}
+
+function check() {
+    HARNESS_JOBS=4 make test
+}
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr
+   sed -i '/INSTALL_LIBS/s/libcrypto.a libssl.a//' Makefile
+   make MANSUFFIX=ssl DESTDIR=${BUILD_DATA_ROOT}/usr install
+   mv -v  ${BUILD_DATA_ROOT}/usr/share/doc/openssl  ${BUILD_DATA_ROOT}/usr/share/doc/openssl-3.3.1
+   cp -vfr doc/* ${BUILD_DATA_ROOT}/usr/share/doc/openssl-3.3.1
+    return 0
+}

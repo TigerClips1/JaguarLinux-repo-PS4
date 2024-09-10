@@ -1,0 +1,50 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="pkgconf"
+VERSION="2.3.0"
+UPSTREAM=1
+DESC="The pkgconf package is a successor to pkg-config and contains a tool for passing the include path and/or library paths to build tools during the configure and make phases of package installations."
+GRPS=("core")
+URL="http://pkgconf.org/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/pkgconf-2.3.0.tar.xz")
+
+
+# Prepare script
+function prepare() {
+    cd $WORKDIR/$NAME-$VERSION
+    ./configure --prefix=/usr              \
+            --disable-static           \
+            --docdir=/usr/share/doc/pkgconf-2.3.0
+    return 0
+}
+
+# Build script
+function build() {
+    cd $WORKDIR/$NAME-$VERSION
+    make
+
+    
+    return 0
+}
+
+function check() {
+    return 0
+} 
+
+# Post build script
+function postbuild() {
+   cd $WORKDIR/$NAME-$VERSION
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr
+
+   make DESTDIR=${BUILD_DATA_ROOT}/usr install
+
+   ln -sv pkgconf   ${BUILD_DATA_ROOT}/usr/bin/pkg-config
+   ln -sv pkgconf.1 ${BUILD_DATA_ROOT}/usr/share/man/man1/pkg-config.1
+   return 0
+}

@@ -1,0 +1,52 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="gawk"
+VERSION="5.3.0"
+UPSTREAM=1
+DESC=" The Gawk package contains programs for manipulating text files."
+GRPS=("core")
+URL="https://www.gnu.org/software/gawk/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/gawk-5.3.0.tar.xz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    sed -i 's/extras//' Makefile.in
+    ./configure --prefix=/usr
+    return 0
+}
+
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    make 
+    return 0
+}
+
+function check() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    make check
+    return 0
+}
+
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/bin
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
+    sudo rm -f /usr/bin/gawk-5.3.0
+    make DESTDIR=${BUILD_DATA_ROOT}/usr install
+    ln -sv gawk.1 ${BUILD_DATA_ROOT}/usr/share/man/man1/awk.1
+    mkdir -pv                                   ${BUILD_DATA_ROOT}/usr/share/doc/gawk-5.3.0
+    cp    -v doc/{awkforai.txt,*.{eps,pdf,jpg}} ${BUILD_DATA_ROOT}/usr/share/doc/gawk-5.3.0
+    return 0
+}

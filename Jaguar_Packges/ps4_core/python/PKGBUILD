@@ -1,0 +1,58 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="python"
+VERSION="3.12.5"
+UPSTREAM=1
+DESC="The Python 3 package contains the Python development environment. It is useful for object-oriented programming, writing scripts, prototyping large programs, and developing entire applications. Python is an interpreted computer language."
+GRPS=("core")
+URL="https://www.python.org"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/Python-3.12.5.tar.xz"
+     "http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/python-3.12.5-docs-html.tar.bz2")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    ./configure --prefix=/usr        \
+            --enable-shared      \
+            --with-system-expat  \
+            --enable-optimizations
+    
+    return 0
+}
+
+function check() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    make test TESTOPTS=4"--timeout 120"
+    return 0
+}
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+
+    make
+
+    return 0
+}
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr/etc
+   make  DESTDIR=${BUILD_DATA_ROOT}/usr install
+   install -v -dm755 ${BUILD_DATA_ROOT}/usr/share/doc/python-3.12.5/html
+   cp -arvf ../../pip.conf ${BUILD_DATA_ROOT}/usr/etc/
+   tar --no-same-owner \
+    -xvf ../python-3.12.5-docs-html.tar.bz2
+    cp -R --no-preserve=mode python-3.12.5-docs-html/* \
+    ${BUILD_DATA_ROOT}/usr/share/doc/python-3.12.5/html
+
+    return 0
+}

@@ -1,0 +1,34 @@
+{
+    "dis_name": "JaguarLinux-repo-PS4",
+    "codename": "CyberGamerX",
+    "version": "Gamer_1_0",
+    "architecture": "x86_64",
+    "colour": true,
+    "progressbar": true,
+    "repos": [
+        {
+            "name": "ps4_core",
+            "active": true,
+            "url": "https://ps4jaguarlinux.site/packages/$dis_name/$codename/$version/$repo/$arch"
+
+        },
+        {
+            "name": "ps4_extra",
+            "active": true,
+            "url": "https://ps4jaguarlinux.site/packages/$dis_name/$codename/$version/$repo/$arch"
+
+        },
+        {
+            "name": "ps4_multilib",
+            "active": true,
+            "url": "https://ps4jaguarlinux.site/packages/$dis_name/$codename/$version/$repo/$arch"
+
+        },
+        {
+            "name": "external",
+            "active": false,
+            "url": "https://www.example.com"
+        }
+    ]
+}
+

@@ -1,0 +1,47 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="check"
+VERSION="0.15.2"
+UPSTREAM=1
+DESC=" Check is a unit testing framework for C."
+GRPS=("core")
+URL="https://www.gnu.org/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/check-0.15.2.tar.gz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    ./configure --prefix=/usr --disable-static
+    return 0
+}
+
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    make 
+    return 0
+}
+
+function check() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    make check
+    return 0
+}
+
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/bin
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
+    make  docdir=${BUILD_DATA_ROOT}/usr/share/doc/check-0.15.2 DESTDIR=${BUILD_DATA_ROOT}/usr install
+    return 0
+}

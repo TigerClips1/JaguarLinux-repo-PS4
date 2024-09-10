@@ -1,0 +1,55 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="ps4"
+VERSION="1.0"
+UPSTREAM=4
+DESC="The JaguarLinux package manager."
+GRPS=("base")
+URL="https://github.com/TigerClips1/JaguarLinux-package-manager"
+LICENSES=("Apache-2.0")
+DEPENDS=("glibc" "sqlite" "curl" "openssl" "wget")
+OPT_DEPENDS=()
+MK_DEPENDS=("rust")
+PROVIDES=("ps4")
+CONFLICTS=()
+REPLACES=()
+
+# Source information
+SRC=("https://github.com/TigerClips1/JaguarLinux-package-manager/archive/refs/tags/v1.0.4.tar.gz")
+
+
+# Prepare script
+function prepare() {
+    return 0
+}
+
+# Build script
+function build() {
+    cd $WORKDIR/JaguarLinux-package-manager-1.0.4
+
+    cargo build --release
+
+    return 0
+}
+
+# Post build script
+function postbuild() {
+    echo "Changeing to the working dir"
+    mkdir -pv ${BUILD_DATA_ROOT}/usr/bin
+    cd $WORKDIR/JaguarLinux-package-manager-1.0.4
+    cp -arvf target/release/ps4           ${BUILD_DATA_ROOT}/usr/bin
+    cp -arvf target/release/ps4-repo-gen  ${BUILD_DATA_ROOT}/usr/bin
+    cp -arvf $WORKDIR/JaguarLinux-package-manager-1.0.4/ps4/scripts/ps4makepkgbuild  ${BUILD_DATA_ROOT}/usr/bin/ps4makepkgbuild
+    chmod +x ${BUILD_DATA_ROOT}/usr/bin/ps4
+    chmod +x ${BUILD_DATA_ROOT}/usr/bin/ps4-repo-gen
+    chmod +x ${BUILD_DATA_ROOT}/usr/bin/ps4makepkgbuild
+    
+    mkdir -pv ${BUILD_DATA_ROOT}/etc/ps4
+    mkdir -pv ${BUILD_DATA_ROOT}/etc/ps4.d
+    cp -arvf ../../mirrorlist ${BUILD_DATA_ROOT}/etc/ps4.d/mirrrolist
+
+    return 0
+}
+

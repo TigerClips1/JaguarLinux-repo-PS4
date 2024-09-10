@@ -1,0 +1,57 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="bzip2"
+VERSION="1.0.8"
+UPSTREAM=1
+DESC=" The Bzip2 package contains programs for compressing and decompressing files. Compressing text files with bzip2 yields a much better compression percentage than with the traditional gzip."
+GRPS=("core")
+URL="https://sourceware.org/bzip2/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/bzip2-1.0.8.tar.gz"
+     "http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/bzip2-1.0.8-install_docs-1.patch"
+    )
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    patch -Np1 -i ../bzip2-1.0.8-install_docs-1.patch
+    sed -i 's@\(ln -s -f \)$(PREFIX)/bin/@\1@' Makefile
+    sed -i "s@(PREFIX)/man@(PREFIX)/share/man@g" Makefile
+    make -f Makefile-libbz2_so
+    make clean
+    
+    return 0
+}
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    make 
+    
+    return 0
+}
+
+function check() {
+    return 0
+} 
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr
+   make  DESTDIR=${BUILD_DATA_ROOT}/usr install
+   cp -av libbz2.so.* ${BUILD_DATA_ROOT}/usr/lib
+   ln -sv libbz2.so.1.0.8 ${BUILD_DATA_ROOT}/usr/lib/libbz2.so
+   cp -v bzip2-shared /usr/bin/bzip2
+    for i in ${BUILD_DATA_ROOT}/usr/bin/{bzcat,bunzip2}; do
+        ln -sfv bzip2 $i
+    done
+    rm -fv ${BUILD_DATA_ROOT}/usr/lib/libbz2.a
+    return 0
+}

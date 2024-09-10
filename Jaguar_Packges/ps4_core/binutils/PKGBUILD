@@ -1,0 +1,62 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="binutils"
+VERSION="2.43.1"
+UPSTREAM=1
+DESC="The Binutils package contains a linker, an assembler, and other tools for handling object files."
+GRPS=("core")
+URL="https://www.gnu.org/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/binutils-2.43.1.tar.xz")
+
+
+# Prepare script
+function prepare() {
+    cd $WORKDIR/$NAME-$VERSION
+    mkdir -v build
+    cd       build
+    ../configure --prefix=/usr       \
+             --sysconfdir=/etc   \
+             --enable-gold       \
+             --enable-ld=default \
+             --enable-plugins    \
+             --enable-shared     \
+             --disable-werror    \
+             --enable-64-bit-bfd \
+             --enable-new-dtags  \
+             --with-system-zlib  \
+             --enable-default-hash-style=gnu
+    return 0
+}
+
+# Build script
+function build() {
+    cd $WORKDIR/$NAME-$VERSION/build
+    make tooldir=/usr
+
+    
+    return 0
+}
+
+function check() {
+    cd $WORKDIR/$NAME-$VERSION/build
+    make -k check
+    grep '^FAIL:' $(find -name '*.log')
+    return 0
+} 
+
+# Post build script
+function postbuild() {
+   cd $WORKDIR/$NAME-$VERSION/build
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr
+
+   make tooldir=${BUILD_DATA_ROOT}/usr install
+   rm -fv ${BUILD_DATA_ROOT}/usr/lib/lib{bfd,ctf,ctf-nobfd,gprofng,opcodes,sframe}.a
+
+   return 0
+}

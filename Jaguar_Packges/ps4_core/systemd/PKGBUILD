@@ -1,0 +1,73 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="systemd"
+VERSION="256.4"
+UPSTREAM=1
+DESC=" The systemd package contains programs for controlling the startup, running, and shutdown of the system."
+GRPS=("core")
+URL="https://systemd.io/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/systemd-256.4.tar.gz"
+    "http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/systemd-man-pages-256.4.tar.xz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    sed -i -e 's/GROUP="render"/GROUP="video"/' \
+       -e 's/GROUP="sgx", //' rules.d/50-udev-default.rules.in
+    mkdir -p build
+    cd       build
+
+    meson setup ..                \
+        --prefix=/usr           \
+        --buildtype=release     \
+        -D default-dnssec=no    \
+        -D firstboot=false      \
+        -D install-tests=false  \
+        -D ldconfig=false       \
+        -D sysusers=false       \
+        -D rpmmacrosdir=no      \
+        -D homed=disabled       \
+        -D userdb=false         \
+        -D man=disabled         \
+        -D mode=release         \
+        -D pamconfdir=no        \
+        -D dev-kvm-mode=0660    \
+        -D nobody-group=nogroup \
+        -D sysupdate=disabled   \
+        -D ukify=disabled       \
+        -D docdir=/usr/share/doc/systemd-256.4
+    return 0
+}
+
+# Build script
+function build() {
+    cd $WORKDIR/$NAME-$VERSION/build
+    ninja
+    return 0
+}
+function check() {
+    cd $WORKDIR/$NAME-$VERSION/build
+    ninja test
+    return 0
+}
+
+
+# Post build script
+function postbuild() {
+   cd $WORKDIR/$NAME-$VERSION/build
+   mkdir -pv ${BUILD_DATA_ROOT}/usr/share
+   mkdir -pv ${BUILD_DATA_ROOT}/usr/etc
+   tar -xf ../../systemd-man-pages-256.4.tar.xz \
+    --no-same-owner --strip-components=1   \
+    -C ${BUILD_DATA_ROOT}/usr/share/man
+    systemd-machine-id-setup
+    systemctl preset-all
+   return 0
+}

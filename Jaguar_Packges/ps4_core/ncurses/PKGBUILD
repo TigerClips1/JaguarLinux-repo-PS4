@@ -1,0 +1,69 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="ncurses"
+VERSION="6.5"
+UPSTREAM=1
+DESC="The Ncurses package contains libraries for terminal-independent handling of character screens."
+GRPS=("core")
+URL="https://invisible-mirror.net/archives/ncurses/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/ncurses-6.5.tar.gz")
+
+
+# Prepare script
+function prepare() {
+    cd $WORKDIR/$NAME-$VERSION
+    ./configure --prefix=/usr           \
+            --mandir=/usr/share/man \
+            --with-shared           \
+            --without-debug         \
+            --without-normal        \
+            --with-cxx-shared       \
+            --enable-pc-files       \
+            --without-cxx-binding \
+            --with-abi-version=5 \
+            --with-pkg-config-libdir=/usr/lib/pkgconfig
+    
+    return 0
+}
+
+# Build script
+function build() {
+    cd $WORKDIR/$NAME-$VERSION
+    make
+
+    return 0
+}
+
+function check() {
+    return 0
+} 
+
+# Post build script
+function postbuild() {
+   cd $WORKDIR/$NAME-$VERSION
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr
+   make DESTDIR=$PWD/dest install
+    install -vm755 dest/usr/lib/libncursesw.so.6.5 ${BUILD_DATA_ROOT}/usr/lib
+    rm -v  dest/usr/lib/libncursesw.so.6.5
+    sed -e 's/^#if.*XOPEN.*$/#if 1/' \
+        -i dest/usr/include/curses.h
+    cp -av dest/* ${BUILD_DATA_ROOT}/
+    for lib in ncurses form panel menu ; do
+        ln -sfv lib${lib}w.so ${BUILD_DATA_ROOT}/usr/lib/lib${lib}.so
+        ln -sfv ${lib}w.pc    ${BUILD_DATA_ROOT}/usr/lib/pkgconfig/${lib}.pc
+    done
+    ln -sfv libncursesw.so ${BUILD_DATA_ROOT}/usr/lib/libcurses.so
+    cp -v -R doc -T ${BUILD_DATA_ROOT}/usr/share/doc/ncurses-6.5
+    make sources libs
+    cp -av lib/lib*.so.5* ${BUILD_DATA_ROOT}/usr/lib
+
+
+
+   return 0
+}

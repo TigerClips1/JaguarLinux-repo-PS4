@@ -1,9 +1,0 @@
-pkgbase = zstd
-    pkgdesc =    Zstandard is a real-time compression algorithm, providing high compression ratios. It offers a very wide range of compression / speed trade-offs, while being backed by a very fast decoder.
-    pkgver = 1.5.5
-    pkgrel = 1
-    url = https://www.linuxfromscratch.org/lfs/downloads/stable-systemd/LFS-BOOK-12.1-systemd-NOCHUNKS.html#ch-system-man-pages
-    arch = x86_64
-    license = GPL
-    source = https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/zstd-1.5.5.tar.gz
-pkgname = zstd

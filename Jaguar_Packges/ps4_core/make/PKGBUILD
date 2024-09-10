@@ -1,0 +1,47 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="make"
+VERSION="4.4.1"
+UPSTREAM=1
+DESC="The Make package contains a program for controlling the generation of executables and other non-source files of a package from source files."
+GRPS=("core")
+URL="https://www.gnu.org/software/make/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/make-4.4.1.tar.gz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    ./configure --prefix=/usr
+    return 0
+}
+
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    make
+    return 0
+}
+
+function check() {
+    make check
+    return 0
+}
+
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/bin
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
+    make DESTDIR=${BUILD_DATA_ROOT}/usr install
+
+    return 0
+}

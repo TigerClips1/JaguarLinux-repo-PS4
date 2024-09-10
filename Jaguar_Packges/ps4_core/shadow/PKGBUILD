@@ -1,0 +1,64 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="shadow"
+VERSION="4.16.0"
+UPSTREAM=1
+DESC="The Shadow package contains programs for handling passwords in a secure way."
+GRPS=("core")
+URL="https://github.com/shadow-maint/shadow"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/shadow-4.16.0.tar.xz")
+
+
+# Prepare script
+function prepare() {
+    cd $WORKDIR/$NAME-$VERSION
+    sed -i 's/groups$(EXEEXT) //' src/Makefile.in
+    find man -name Makefile.in -exec sed -i 's/groups\.1 / /'   {} \;
+    find man -name Makefile.in -exec sed -i 's/getspnam\.3 / /' {} \;
+    find man -name Makefile.in -exec sed -i 's/passwd\.5 / /'   {} \;
+    sed -e 's:#ENCRYPT_METHOD DES:ENCRYPT_METHOD YESCRYPT:' \
+        -e 's:/var/spool/mail:/var/mail:'                   \
+        -e '/PATH=/{s@/sbin:@@;s@/bin:@@}'                  \
+        -i etc/login.defs
+        
+    ./configure --sysconfdir=/etc   \
+            --disable-static    \
+            --with-{b,yes}crypt \
+            --without-libbsd    \
+            --with-group-name-max-length=32
+    return 0
+}
+
+# Build script
+function build() {
+    cd $WORKDIR/$NAME-$VERSION
+    make
+
+    return 0
+}
+
+function check() {
+    return 0
+} 
+
+# Post build script
+function postbuild() {
+   cd $WORKDIR/$NAME-$VERSION
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr/bin
+   touch  ${BUILD_DATA_ROOT}/usr/bin/passwd
+   make exec_prefix=${BUILD_DATA_ROOT}/usr install
+   make -C man install-man
+   pwconv
+   grpconv
+   mkdir -p ${BUILD_DATA_ROOT}/etc/default
+   useradd -D --gid 999
+   sed -i '/MAIL/s/yes/no/' ${BUILD_DATA_ROOT}/etc/default/useradd
+
+   return 0
+}

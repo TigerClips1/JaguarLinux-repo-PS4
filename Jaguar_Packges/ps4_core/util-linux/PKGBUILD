@@ -1,0 +1,63 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="util-linux"
+VERSION="2.40.2"
+UPSTREAM=1
+DESC="The Util-linux package contains miscellaneous utility programs."
+GRPS=("core")
+URL="https://github.com/util-linux"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/util-linux-2.40.2.tar.xz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    ./configure --bindir=/usr/bin     \
+            --libdir=/usr/lib     \
+            --runstatedir=/run    \
+            --sbindir=/usr/sbin   \
+            --disable-chfn-chsh   \
+            --disable-login       \
+            --disable-nologin     \
+            --disable-su          \
+            --disable-setpriv     \
+            --disable-runuser     \
+            --disable-pylibmount  \
+            --disable-liblastlog2 \
+            --disable-static      \
+            --without-python      \
+            ADJTIME_PATH=/var/lib/hwclock/adjtime \
+            --docdir=/usr/share/doc/util-linux-2.40.2
+    
+    return 0
+}
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+
+    make
+
+    return 0
+}
+
+function check() {
+    make -k check
+}
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+   mkdir -pv ${BUILD_DATA_ROOT}/var/lib/hwclock
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr/etc
+   make  DESTDIR=${BUILD_DATA_ROOT}/usr install
+   cp -arvf ../fstab ${BUILD_DATA_ROOT}/usr/etc
+
+    return 0
+}

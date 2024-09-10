@@ -1,0 +1,50 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="iproute"
+VERSION="6.10.0"
+UPSTREAM=1
+DESC=" The IPRoute2 package contains programs for basic and advanced IPV4-based networking."
+GRPS=("core")
+URL="https://git.kernel.org/pub/scm/network/iproute2/iproute2.git"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/iproute2-6.10.0.tar.xz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    sed -i /ARPD/d Makefile
+    rm -fv man/man8/arpd.8
+    return 0
+}
+
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    make NETNS_RUN_DIR=/run/netns
+    return 0
+}
+
+function check() {
+    return 0
+}
+
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/bin
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
+    make SBINDIR= ${BUILD_DATA_ROOT}/usr/sbin install
+    mkdir -pv             ${BUILD_DATA_ROOT}/usr/share/doc/iproute2-6.10.0
+    cp -v COPYING README* ${BUILD_DATA_ROOT}/usr/share/doc/iproute2-6.10.0
+
+
+    return 0
+}

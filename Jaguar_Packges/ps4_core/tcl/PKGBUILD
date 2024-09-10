@@ -1,0 +1,74 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="tcl"
+VERSION="8.6.14"
+UPSTREAM=1
+DESC=" The Tcl package contains the Tool Command Language, a robust general-purpose scripting language. The Expect package is written in Tcl (pronounced "tickle")."
+GRPS=("core")
+URL="https://github.com/westes/flex"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/tcl8.6.14-src.tar.gz"
+     "http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/tcl8.6.14-html.tar.gz"
+    )
+
+
+# Prepare script
+function prepare() {
+    SRCDIR=$(pwd)
+    cd $WORKDIR/$NAME-$VERSION/unix
+    ./configure --prefix=/usr           \
+            --mandir=/usr/share/man \
+            --disable-rpath
+    
+    return 0
+}
+
+# Build script
+function build() {
+    cd $WORKDIR/$NAME-$VERSION/unix
+    make
+
+    sed -e "s|$SRCDIR/unix|/usr/lib|" \
+        -e "s|$SRCDIR|/usr/include|"  \
+        -i tclConfig.sh
+
+    sed -e "s|$SRCDIR/unix/pkgs/tdbc1.1.7|/usr/lib/tdbc1.1.7|" \
+        -e "s|$SRCDIR/pkgs/tdbc1.1.7/generic|/usr/include|"    \
+        -e "s|$SRCDIR/pkgs/tdbc1.1.7/library|/usr/lib/tcl8.6|" \
+        -e "s|$SRCDIR/pkgs/tdbc1.1.7|/usr/include|"            \
+        -i pkgs/tdbc1.1.7/tdbcConfig.sh
+
+    sed -e "s|$SRCDIR/unix/pkgs/itcl4.2.4|/usr/lib/itcl4.2.4|" \
+        -e "s|$SRCDIR/pkgs/itcl4.2.4/generic|/usr/include|"    \
+        -e "s|$SRCDIR/pkgs/itcl4.2.4|/usr/include|"            \
+        -i pkgs/itcl4.2.4/itclConfig.sh
+
+    unset SRCDIR
+    
+    return 0
+}
+
+function check() {
+    make test
+    return 0
+} 
+
+# Post build script
+function postbuild() {
+   cd $WORKDIR/$NAME-$VERSION/unix
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr
+   make DESTDIR=${BUILD_DATA_ROOT}/usr install
+   chmod -v u+w ${BUILD_DATA_ROOT}/usr/lib/libtcl8.6.so
+   make DESTDIR=${BUILD_DATA_ROOT}/usr install-private-headers
+   ln -sfv tclsh8.6 ${BUILD_DATA_ROOT}/usr/bin/tclsh
+   mv ${BUILD_DATA_ROOT}/usr/share/man/man3/{Thread,Tcl_Thread}.3
+   tar -xvf ../../tcl8.6.14-html.tar.gz --strip-components=1
+   mkdir -v -p ${BUILD_DATA_ROOT}/usr/share/doc/tcl-8.6.14
+   cp -v -r  ./html/* ${BUILD_DATA_ROOT}/usr/share/doc/tcl-8.6.14
+   return 0
+}

@@ -1,3 +1,0 @@
-[linux-firmware]
-source = "git"
-git = "https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/snapshot/linux-firmware-main.tar.gz"

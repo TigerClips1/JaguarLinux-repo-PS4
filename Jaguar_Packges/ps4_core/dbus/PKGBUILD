@@ -1,0 +1,55 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="dbus"
+VERSION="1.14.10"
+UPSTREAM=1
+DESC="D-Bus is a message bus system, a simple way for applications to talk to one another. D-Bus supplies both a system daemon (for events such as "new hardware device added" or "printer queue changed") and a per-user-login-session daemon (for general IPC needs among user applications). Also, the message bus is built on top of a general one-to-one message passing framework, which can be used by any two applications to communicate directly (without going through the message bus daemon)."
+GRPS=("core")
+URL="https://gitlab.freedesktop.org/dbus/dbus"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/dbus-1.14.10.tar.xz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    ./configure --prefix=/usr                        \
+            --sysconfdir=/etc                    \
+            --localstatedir=/var                 \
+            --runstatedir=/run                   \
+            --enable-user-session                \
+            --disable-static                     \
+            --disable-doxygen-docs               \
+            --disable-xml-docs                   \
+            --docdir=/usr/share/doc/dbus-1.14.10 \
+            --with-system-socket=/run/dbus/system_bus_socket
+}
+
+# Build script
+function build() {
+    cd $WORKDIR/$NAME-$VERSION
+    make
+    return 0
+}
+function check() {
+    cd $WORKDIR/$NAME-$VERSION
+    make check
+    return 0
+}
+
+
+# Post build script
+function postbuild() {
+   cd $WORKDIR/$NAME-$VERSION
+   mkdir -pv ${BUILD_DATA_ROOT}/usr/share
+   mkdir -pv ${BUILD_DATA_ROOT}/var/lib/dbus
+   make DESTDIR=${BUILD_DATA_ROOT}/usr install
+   ln -sfv /etc/machine-id ${BUILD_DATA_ROOT}/var/lib/dbus
+
+   return 0
+}

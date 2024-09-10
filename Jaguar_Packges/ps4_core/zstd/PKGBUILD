@@ -1,0 +1,43 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="zstd"
+VERSION="1.5.6"
+UPSTREAM=1
+DESC="Zstandard is a real-time compression algorithm, providing high compression ratios. It offers a very wide range of compression / speed trade-offs, while being backed by a very fast decoder."
+GRPS=("core")
+URL="http://www.zstd.net/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/zstd-1.5.6.tar.gz")
+
+
+# Prepare script
+function prepare() {
+    return 0
+}
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    make prefix=/usr
+    
+    return 0
+}
+
+function check() {
+    make check
+    return 0
+} 
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr
+   make prefix=${BUILD_DATA_ROOT}/usr install
+   rm -v ${BUILD_DATA_ROOT}/usr/lib/libzstd.a
+   return 0
+}

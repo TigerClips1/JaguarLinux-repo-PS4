@@ -1,9 +1,0 @@
-pkgbase = file
-    pkgdesc = The File package contains a utility for determining the type of a given file or files. 
-    pkgver = 5.45
-    pkgrel = 1
-    url = https://www.linuxfromscratch.org/lfs/downloads/stable-systemd/LFS-BOOK-12.1-systemd-NOCHUNKS.html#ch-system-man-pages
-    arch = x86_64
-    license = GPL
-    source = https://ftp.osuosl.org/pub/lfs/lfs-packages/12.1/file-5.45.tar.gz
-pkgname = file

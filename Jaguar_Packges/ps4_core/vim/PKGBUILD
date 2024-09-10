@@ -1,0 +1,52 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="vim"
+VERSION="9.1.0660 "
+UPSTREAM=1
+DESC="The Vim package contains a powerful text editor."
+GRPS=("core")
+URL="https://www.vim.org/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/vim-9.1.0660.tar.gz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    echo '#define SYS_VIMRC_FILE "/etc/vimrc"' >> src/feature.h
+    ./configure --prefix=/usr
+    
+    return 0
+}
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+
+    make
+
+    return 0
+}
+function check() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    make -j1 test
+}
+
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr
+   make  DESTDIR=${BUILD_DATA_ROOT}/usr install
+   ln -sv vim ${BUILD_DATA_ROOT}/usr/bin/vi
+    for L in  ${BUILD_DATA_ROOT}/usr/share/man/{,*/}man1/vim.1; do
+        ln -sv vim.1 $(dirname $L)/vi.1
+    done
+    ln -sv ../vim/vim91/doc ${BUILD_DATA_ROOT}/usr/share/doc/vim-9.1.0660
+    return 0
+}

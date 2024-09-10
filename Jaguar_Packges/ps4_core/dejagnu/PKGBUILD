@@ -1,0 +1,55 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="dejagnu"
+VERSION="1.6.3"
+UPSTREAM=1
+DESC="The DejaGnu package contains a framework for running test suites on GNU tools. It is written in expect, which itself uses Tcl (Tool Command Language)."
+GRPS=("core")
+URL="https://www.gnu.org"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/dejagnu-1.6.3.tar.gz")
+
+
+# Prepare script
+function prepare() {
+    cd $WORKDIR/$NAME-$VERSION
+    mkdir -v build
+    cd       build
+    ../configure --prefix=/usr
+    makeinfo --html --no-split -o doc/dejagnu.html ../doc/dejagnu.texi
+    makeinfo --plaintext       -o doc/dejagnu.txt  ../doc/dejagnu.texi
+    return 0
+}
+
+# Build script
+function build() {
+    cd $WORKDIR/$NAME-$VERSION/build
+    make
+
+    
+    return 0
+}
+
+function check() {
+    cd $WORKDIR/$NAME-$VERSION/build
+    make check
+    return 0
+} 
+
+# Post build script
+function postbuild() {
+   cd $WORKDIR/$NAME-$VERSION/build
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr
+
+   make DESTDIR=${BUILD_DATA_ROOT}/usr install
+
+   install -v -dm755  ${BUILD_DATA_ROOT}/usr/share/doc/dejagnu-1.6.3
+   install -v -m644   doc/dejagnu.{html,txt} ${BUILD_DATA_ROOT}/usr/share/doc/dejagnu-1.6.3
+
+   return 0
+}

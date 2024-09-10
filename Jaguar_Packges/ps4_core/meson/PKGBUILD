@@ -1,0 +1,45 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="meson"
+VERSION="1.5.1"
+UPSTREAM=1
+DESC=" Meson is an open source build system designed to be both extremely fast and as user friendly as possible."
+GRPS=("core")
+URL="https://mesonbuild.com/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/meson-1.5.1.tar.gz")
+
+
+# Prepare script
+function prepare() {
+    return 0
+}
+
+function check() {
+    return 0
+}
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    pip3 wheel -w dist --no-cache-dir --no-build-isolation --no-deps $PWD
+
+    return 0
+}
+
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/bin
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
+    pip3 install --no-index --find-links dist meson
+    install -vDm644 data/shell-completions/bash/meson ${BUILD_DATA_ROOT}/usr/share/bash-completion/completions/meson
+    install -vDm644 data/shell-completions/zsh/_meson ${BUILD_DATA_ROOT}/usr/share/zsh/site-functions/_meson
+    return 0
+}

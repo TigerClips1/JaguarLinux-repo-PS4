@@ -1,0 +1,48 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="procps-ng"
+VERSION="4.0.4"
+UPSTREAM=1
+DESC=" The Procps-ng package contains programs for monitoring processes."
+GRPS=("core")
+URL="https://gitlab.com/procps-ng/procps"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/procps-ng-4.0.4.tar.xz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    ./configure --prefix=/usr                           \
+                --docdir=/usr/share/doc/procps-ng-4.0.4 \
+                --disable-static                        \
+                --disable-kill                          \
+                --with-systemd
+}
+
+# Build script
+function build() {
+    cd $WORKDIR/$NAME-$VERSION
+    make src_w_LDADD='$(LDADD) -lsystemd'
+    return 0
+}
+function check() {
+    cd $WORKDIR/$NAME-$VERSION
+    make check
+    return 0
+}
+
+
+# Post build script
+function postbuild() {
+   cd $WORKDIR/$NAME-$VERSION
+   mkdir -pv ${BUILD_DATA_ROOT}/usr/share
+   make DESTDIR=${BUILD_DATA_ROOT}/usr install
+
+   return 0
+}

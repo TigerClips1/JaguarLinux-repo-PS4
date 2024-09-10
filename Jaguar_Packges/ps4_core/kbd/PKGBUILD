@@ -1,0 +1,53 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="kbd"
+VERSION="2.6.4"
+UPSTREAM=1
+DESC="The Kbd package contains key-table files, console fonts, and keyboard utilities."
+GRPS=("core")
+URL="https://kbd-project.org/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/kbd-2.6.4.tar.xz"
+     "http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/kbd-2.6.4-backspace-1.patch"
+    )
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    patch -Np1 -i ../kbd-2.6.4-backspace-1.patch
+    sed -i '/RESIZECONS_PROGS=/s/yes/no/' configure
+    sed -i 's/resizecons.8 //' docs/man/man8/Makefile.in
+    ./configure --prefix=/usr --disable-vlock
+    return 0
+}
+
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    make
+    return 0
+}
+
+function check() {
+    make check
+    return 0
+}
+
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/bin
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
+    make DESTDIR=${BUILD_DATA_ROOT}/usr install
+    cp -R -v docs/doc -T ${BUILD_DATA_ROOT}/usr/share/doc/kbd-2.6.4
+
+    return 0
+}

@@ -1,0 +1,46 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="grep"
+VERSION="3.11"
+UPSTREAM=1
+DESC="The Grep package contains programs for searching through the contents of files."
+GRPS=("core")
+URL="https://www.gnu.org/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/bison-3.8.2.tar.xz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    sed -i "s/echo/#echo/" src/egrep.sh
+    ./configure --prefix=/usr
+    return 0
+}
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+
+    make
+
+    return 0
+}
+function check() {
+    make check
+}
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+   mkdir -pv  ${BUILD_DATA_ROOT}/usr
+   make  DESTDIR=${BUILD_DATA_ROOT}/usr install
+
+    return 0
+}

@@ -1,0 +1,47 @@
+# Package Maintainers
+MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
+
+# Package information
+NAME="libpipeline"
+VERSION="1.5.7"
+UPSTREAM=1
+DESC=" The Libpipeline package contains a library for manipulating pipelines of subprocesses in a flexible and convenient way."
+GRPS=("core")
+URL="https://nongnu.org/libpipeline/"
+LICENSES=("GPL")
+DEPENDS=("ps4_core")
+
+# Source information
+SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/libpipeline-1.5.7.tar.gz")
+
+
+# Prepare script
+function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    ./configure --prefix=/usr
+    return 0
+}
+
+
+# Build script
+function build() {
+    cd "$WORKDIR/$NAME-$VERSION"
+    make
+    return 0
+}
+
+function check() {
+    make check
+    return 0
+}
+
+
+# Post build script
+function postbuild() {
+   cd "$WORKDIR/$NAME-$VERSION"
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/bin
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
+    make DESTDIR=${BUILD_DATA_ROOT}/usr install
+
+    return 0
+}
