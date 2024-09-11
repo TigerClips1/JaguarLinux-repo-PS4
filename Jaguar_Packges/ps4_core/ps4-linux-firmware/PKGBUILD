@@ -15,30 +15,30 @@ DEPENDS=("ps4_core")
 SRC=("https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/snapshot/linux-firmware-20240811.tar.gz"
     "https://raw.githubusercontent.com/fail0verflow/radeon-tools/master/f32/resize_firmware.py")
 
-
 # Prepare script
 function prepare() {
+ cd $WORKDIR/linux-firmware-20240811
+   echo "testing comepileing"
     for unit in mec mec2 sdma sdma1 uvd vce pfp me ce; do
-		python3  ./resize_firmware.py $WORKDIR/$NAME-$VERSION/amdgpu/kaveri_${unit}.bin 17024 $WORKDIR/$NAME-$VERSION/amdgpu/liverpool_${unit}.bin
-	done
+	    python3  ../resize_firmware.py amdgpu/kaveri_${unit}.bin 17024 amdgpu/liverpool_${unit}.bin
+    done
   
     for unit2 in mec mec2 sdma sdma1 uvd vce pfp me ce; do
-        python3  ./resize_firmware.py $WORKDIR/$NAME-$VERSION/radeon/kaveri_${unit2}.bin 17024 $WORKDIR/$NAME-$VERSION/radeon/liverpool_${unit2}.bin
+        python3  ../resize_firmware.py radeon/kaveri_${unit2}.bin 17024 radeon/liverpool_${unit2}.bin
     done
 
     for unit3 in mec mec2 sdma sdma1 uvd vce pfp me ce; do
-        python3  ./resize_firmware.py $WORKDIR/$NAME-$VERSION/radeon/kaveri_${unit3}.bin 17024 $WORKDIR/$NAME-$VERSION/radeon/LIVERPOOL_${unit3}.bin
-	done
+        python3  ../resize_firmware.py radeon/kaveri_${unit3}.bin 17024 radeon/LIVERPOOL_${unit3}.bin
+    done
     
     return 0
 }
 
-
 # Post build script
 function postbuild() {
-   cd "$WORKDIR/$NAME-$VERSION"
+   cd $WORKDIR/linux-firmware-20240811
    mkdir -pv ${BUILD_DATA_ROOT}/usr/lib/firmware
-   make DESTDIR="FIRMWAREDIR=${BUILD_DATA_ROOT}/usr/lib/firmware install-all"
+   make FIRMWAREDIR=${BUILD_DATA_ROOT}/usr/lib/firmware install
   
   for driver in mec mec2 sdma sdma1 uvd vce pfp me ce; do
     cp -arvf amdgpu/liverpool_${driver}.bin  ${BUILD_DATA_ROOT}/usr/lib/firmware/amdgpu/
