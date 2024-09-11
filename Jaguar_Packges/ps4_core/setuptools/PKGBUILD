@@ -23,7 +23,7 @@ function prepare() {
 # Build script
 function build() {
     cd "$WORKDIR/$NAME-$VERSION"
-    pip3 wheel -w dist --no-cache-dir --no-build-isolation --no-deps $PWD
+    pip3 wheel -w dist --no-cache-dir --no-build-isolation --no-deps --prefix=/usr
 
     return 0
 }
@@ -37,7 +37,8 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   pip3 install --no-index --find-links dist setuptools
+   mkdir -pv ${BUILD_DATA_ROOT}/usr
+   pip3 install --no-index --find-links --prefix=${BUILD_DATA_ROOT}/usr dist setuptools
 
     return 0
 }
