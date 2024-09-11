@@ -41,9 +41,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-    mkdir -pv  ${BUILD_DATA_ROOT}/usr/bin
-    mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
-    sudo rm -f /usr/bin/gawk-5.3.0
     make DESTDIR=${BUILD_DATA_ROOT}/usr install
     ln -sv gawk.1 ${BUILD_DATA_ROOT}/usr/share/man/man1/awk.1
     mkdir -pv                                   ${BUILD_DATA_ROOT}/usr/share/doc/gawk-5.3.0

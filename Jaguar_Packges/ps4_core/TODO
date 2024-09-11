@@ -1,5 +1,2 @@
-1. add info to the .SRCINFO
-2. compile all of these packages to binary
-3. fix the code
-4. fix the ps4makepkgbuild
-5. also fix the kernel file 
+1. fix the ps4makepkgbuild
+2. also fix the kernel file 

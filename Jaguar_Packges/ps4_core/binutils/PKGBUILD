@@ -53,8 +53,7 @@ function check() {
 # Post build script
 function postbuild() {
    cd $WORKDIR/$NAME-$VERSION/build
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr
-
+   
    make tooldir=${BUILD_DATA_ROOT}/usr install
    rm -fv ${BUILD_DATA_ROOT}/usr/lib/lib{bfd,ctf,ctf-nobfd,gprofng,opcodes,sframe}.a
 

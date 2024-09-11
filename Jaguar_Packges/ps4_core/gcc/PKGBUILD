@@ -64,7 +64,6 @@ function check() {
 function postbuild() {
    #hopefully this works
    cd $WORKDIR/$NAME-$VERSION/build
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr
 
     make DESTDIR=${BUILD_DATA_ROOT}/usr install
     ln -svr ${BUILD_DATA_ROOT}/usr/bin/cpp ${BUILD_DATA_ROOT}/usr/lib

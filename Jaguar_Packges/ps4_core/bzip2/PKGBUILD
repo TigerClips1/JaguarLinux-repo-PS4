@@ -44,7 +44,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr
    make  DESTDIR=${BUILD_DATA_ROOT}/usr install
    cp -av libbz2.so.* ${BUILD_DATA_ROOT}/usr/lib
    ln -sv libbz2.so.1.0.8 ${BUILD_DATA_ROOT}/usr/lib/libbz2.so

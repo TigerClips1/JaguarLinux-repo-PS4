@@ -39,8 +39,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd $WORKDIR/$NAME-$VERSION
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr
-
    make prefix=${BUILD_DATA_ROOT}/usr lib=lib install
 
    return 0

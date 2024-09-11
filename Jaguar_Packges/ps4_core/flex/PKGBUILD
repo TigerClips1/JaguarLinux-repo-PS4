@@ -34,6 +34,7 @@ function build() {
 }
 
 function check() {
+    cd "$WORKDIR/$NAME-$VERSION"
     make check
     return 0
 } 
@@ -41,7 +42,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr
    make DESTDIR=${BUILD_DATA_ROOT}/usr install
    ln -sv flex   ${BUILD_DATA_ROOT}/usr/bin/lex
    ln -sv flex.1 ${BUILD_DATA_ROOT}/usr/share/man/man1/lex.1

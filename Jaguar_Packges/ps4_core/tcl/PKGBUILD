@@ -54,6 +54,7 @@ function build() {
 }
 
 function check() {
+    cd $WORKDIR/$NAME-$VERSION/unix
     make test
     return 0
 } 
@@ -61,7 +62,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd $WORKDIR/$NAME-$VERSION/unix
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr
    make DESTDIR=${BUILD_DATA_ROOT}/usr install
    chmod -v u+w ${BUILD_DATA_ROOT}/usr/lib/libtcl8.6.so
    make DESTDIR=${BUILD_DATA_ROOT}/usr install-private-headers

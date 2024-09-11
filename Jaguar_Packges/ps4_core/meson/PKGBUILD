@@ -36,7 +36,6 @@ function build() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-    mkdir -pv  ${BUILD_DATA_ROOT}/usr/bin
     mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
     pip3 install --no-index --find-links dist meson
     install -vDm644 data/shell-completions/bash/meson ${BUILD_DATA_ROOT}/usr/share/bash-completion/completions/meson

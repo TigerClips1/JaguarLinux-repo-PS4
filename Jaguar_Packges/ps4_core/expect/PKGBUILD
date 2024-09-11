@@ -52,7 +52,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd $WORKDIR/$NAME-$VERSION/unix
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr
 
    make DESTDIR=${BUILD_DATA_ROOT}/usr install
    ln -svf expect5.45.4/libexpect5.45.4.so ${BUILD_DATA_ROOT}/usr/libs

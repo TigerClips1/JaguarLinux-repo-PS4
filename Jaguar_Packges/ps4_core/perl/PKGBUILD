@@ -48,13 +48,13 @@ function build() {
 }
 
 function check() {
+    cd "$WORKDIR/$NAME-$VERSION"
     TEST_JOBS=$(nproc) make test_harness
 }
 
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr
    make  DESTDIR=${BUILD_DATA_ROOT}/usr install
    unset BUILD_ZLIB BUILD_BZIP2
 

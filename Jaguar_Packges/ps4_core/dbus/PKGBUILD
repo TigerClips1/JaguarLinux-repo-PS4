@@ -46,8 +46,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd $WORKDIR/$NAME-$VERSION
-   mkdir -pv ${BUILD_DATA_ROOT}/usr/share
-   mkdir -pv ${BUILD_DATA_ROOT}/var/lib/dbus
    make DESTDIR=${BUILD_DATA_ROOT}/usr install
    ln -sfv /etc/machine-id ${BUILD_DATA_ROOT}/var/lib/dbus
 

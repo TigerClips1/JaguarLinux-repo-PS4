@@ -29,6 +29,7 @@ function build() {
 }
 
 function check() {
+    cd "$WORKDIR/$NAME-$VERSION"
     make -j1 check
     return 0
 } 
@@ -36,7 +37,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr
    make BUILD_STATIC=no PREFIX=${BUILD_DATA_ROOT}/usr install
    return 0
 }

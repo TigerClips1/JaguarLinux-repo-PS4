@@ -62,12 +62,9 @@ function check() {
 # Post build script
 function postbuild() {
    cd $WORKDIR/$NAME-$VERSION/build
-   mkdir -pv ${BUILD_DATA_ROOT}/usr/share
-   mkdir -pv ${BUILD_DATA_ROOT}/usr/etc
-   tar -xf ../../systemd-man-pages-256.4.tar.xz \
+   ninja DESTDIR=/usr install
+   tar -xvf ../../systemd-man-pages-256.4.tar.xz \
     --no-same-owner --strip-components=1   \
     -C ${BUILD_DATA_ROOT}/usr/share/man
-    systemd-machine-id-setup
-    systemctl preset-all
    return 0
 }

@@ -34,13 +34,14 @@ function build() {
 }
 
 function check() {
+    cd "$WORKDIR/$NAME-$VERSION"
     make check
+    return 0
 }
 
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr
    make  DESTDIR=${BUILD_DATA_ROOT}/usr install
    install -v -Dm644 doc/I18N-HOWTO ${BUILD_DATA_ROOT}/usr/share/doc/intltool-0.51.0/I18N-HOWTO
 

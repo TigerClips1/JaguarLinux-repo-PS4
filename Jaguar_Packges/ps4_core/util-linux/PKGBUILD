@@ -48,14 +48,13 @@ function build() {
 }
 
 function check() {
+    cd "$WORKDIR/$NAME-$VERSION"
     make -k check
 }
 
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   mkdir -pv ${BUILD_DATA_ROOT}/var/lib/hwclock
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr/etc
    make  DESTDIR=${BUILD_DATA_ROOT}/usr install
    cp -arvf ../fstab ${BUILD_DATA_ROOT}/usr/etc
 

@@ -37,13 +37,13 @@ function build() {
 }
 
 function check() {
+    cd "$WORKDIR/$NAME-$VERSION"
     HARNESS_JOBS=4 make test
 }
 
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr
    sed -i '/INSTALL_LIBS/s/libcrypto.a libssl.a//' Makefile
    make MANSUFFIX=ssl DESTDIR=${BUILD_DATA_ROOT}/usr install
    mv -v  ${BUILD_DATA_ROOT}/usr/share/doc/openssl  ${BUILD_DATA_ROOT}/usr/share/doc/openssl-3.3.1

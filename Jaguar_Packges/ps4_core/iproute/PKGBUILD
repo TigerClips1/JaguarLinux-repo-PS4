@@ -39,7 +39,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-    mkdir -pv  ${BUILD_DATA_ROOT}/usr/bin
     mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
     make SBINDIR= ${BUILD_DATA_ROOT}/usr/sbin install
     mkdir -pv             ${BUILD_DATA_ROOT}/usr/share/doc/iproute2-6.10.0

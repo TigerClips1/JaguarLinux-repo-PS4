@@ -19,15 +19,15 @@ SRC=("https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.gi
 # Prepare script
 function prepare() {
     for unit in mec mec2 sdma sdma1 uvd vce pfp me ce; do
-		python3  ../resize_firmware.py $WORKDIR/$NAME-$VERSION/amdgpu/kaveri_${unit}.bin 17024 $WORKDIR/$NAME-$VERSION/amdgpu/liverpool_${unit}.bin
+		python3  ./resize_firmware.py $WORKDIR/$NAME-$VERSION/amdgpu/kaveri_${unit}.bin 17024 $WORKDIR/$NAME-$VERSION/amdgpu/liverpool_${unit}.bin
 	done
   
     for unit2 in mec mec2 sdma sdma1 uvd vce pfp me ce; do
-        python3  ../resize_firmware.py $WORKDIR/$NAME-$VERSION/radeon/kaveri_${unit2}.bin 17024 $WORKDIR/$NAME-$VERSION/radeon/liverpool_${unit2}.bin
+        python3  ./resize_firmware.py $WORKDIR/$NAME-$VERSION/radeon/kaveri_${unit2}.bin 17024 $WORKDIR/$NAME-$VERSION/radeon/liverpool_${unit2}.bin
     done
 
     for unit3 in mec mec2 sdma sdma1 uvd vce pfp me ce; do
-        python3  ../resize_firmware.py $WORKDIR/$NAME-$VERSION/radeon/kaveri_${unit3}.bin 17024 $WORKDIR/$NAME-$VERSION/radeon/LIVERPOOL_${unit3}.bin
+        python3  ./resize_firmware.py $WORKDIR/$NAME-$VERSION/radeon/kaveri_${unit3}.bin 17024 $WORKDIR/$NAME-$VERSION/radeon/LIVERPOOL_${unit3}.bin
 	done
     
     return 0
@@ -37,18 +37,13 @@ function prepare() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-     ZSTD_CLEVEL=19 make DESTDIR="$WORKDIR/$NAME-$VERSION" FIRMWAREDIR=/usr/lib/firmware install-zst
+   mkdir -pv ${BUILD_DATA_ROOT}/usr/lib/firmware
+   make DESTDIR="FIRMWAREDIR=${BUILD_DATA_ROOT}/usr/lib/firmware install-all"
   
   for driver in mec mec2 sdma sdma1 uvd vce pfp me ce; do
     cp -arvf amdgpu/liverpool_${driver}.bin  ${BUILD_DATA_ROOT}/usr/lib/firmware/amdgpu/
     cp -arvf radeon/liverpool_${driver}.bin  ${BUILD_DATA_ROOT}/usr/lib/firmware/radeon/
-    cp -arvf radeon/LIVERPOOL_${driver}.bin  ${BUILD_DATA_ROOT}/usr/lib/firmware/radeon/
-    zstd --compress --quiet ${BUILD_DATA_ROOT}/usr/lib/firmware/amdgpu/liverpool_${driver}.bin
-    zstd --compress --quiet ${BUILD_DATA_ROOT}/usr/lib/firmware/radeon/liverpool_${driver}.bin
-    zstd --compress --quiet ${BUILD_DATA_ROOT}/usr/lib/firmware/radeon/LIVERPOOL_${driver}.bin
-    rm -rfv ${BUILD_DATA_ROOT}/usr/lib/firmware/amdgpu/liverpool_${driver}.bin 
-    rm -rfv ${BUILD_DATA_ROOT}/usr/lib/firmware/radeon/liverpool_${driver}.bin 
-    rm -rfv ${BUILD_DATA_ROOT}/usr/lib/firmware/radeon/LIVERPOOL_${driver}.bin 
+    cp -arvf radeon/LIVERPOOL_${driver}.bin  ${BUILD_DATA_ROOT}/usr/lib/firmware/radeon/ 
   done
   
   install -Dt "${BUILD_DATA_ROOT}/usr/share/licenses/${NAME}" -m644 LICEN*

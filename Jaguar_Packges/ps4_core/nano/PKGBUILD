@@ -41,8 +41,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-    mkdir -pv  ${BUILD_DATA_ROOT}/usr/bin
-    mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
     make DESTDIR=${BUILD_DATA_ROOT}/usr install
     install -v -m644 doc/{nano.html,sample.nanorc} ${BUILD_DATA_ROOT}/usr/share/doc/nano-8.1
     return 0

@@ -20,10 +20,6 @@ function prepare() {
     return 0
 }
 
-function check() {
-    return 0
-}
-
 # Build script
 function build() {
     cd "$WORKDIR/$NAME-$VERSION"
@@ -31,6 +27,11 @@ function build() {
 
     return 0
 }
+
+function check() {
+    return 0
+}
+
 
 
 # Post build script

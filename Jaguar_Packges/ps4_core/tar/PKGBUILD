@@ -32,6 +32,7 @@ function build() {
 }
 
 function check() {
+    cd "$WORKDIR/$NAME-$VERSION"
     make check
     return 0
 }
@@ -40,8 +41,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-    mkdir -pv  ${BUILD_DATA_ROOT}/usr/bin
-    mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
     make DESTDIR=${BUILD_DATA_ROOT}/usr install
     make -C doc install-html docdir=${BUILD_DATA_ROOT}/usr/share/doc/tar-1.35
 

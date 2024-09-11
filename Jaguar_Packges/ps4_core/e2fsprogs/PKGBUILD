@@ -48,7 +48,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr/etc
    make  DESTDIR=${BUILD_DATA_ROOT}/usr install
    rm -fv ${BUILD_DATA_ROOT}/usr/lib/{libcom_err,libe2p,libext2fs,libss}.a
    gunzip -v /usr/share/info/libext2fs.info.gz

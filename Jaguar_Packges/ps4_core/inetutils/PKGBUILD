@@ -42,13 +42,14 @@ function build() {
     return 0
 }
 function check() {
+    cd "$WORKDIR/$NAME-$VERSION"
     make  check
+    return 0
 }
 
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr
    make  DESTDIR=${BUILD_DATA_ROOT}/usr install
    mv -v ${BUILD_DATA_ROOT}/usr/{,s}bin/ifconfig
 

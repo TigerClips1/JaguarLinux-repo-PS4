@@ -32,6 +32,7 @@ function build() {
     return 0
 }
 function check() {
+    cd "$WORKDIR/$NAME-$VERSION"
     make check
 }
 
@@ -39,7 +40,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr
    make  DESTDIR=${BUILD_DATA_ROOT}/usr install
    make TEXMF=${BUILD_DATA_ROOT}/usr/share/texmf install-tex
     pushd /usr/share/info

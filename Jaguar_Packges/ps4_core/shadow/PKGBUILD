@@ -50,10 +50,9 @@ function check() {
 # Post build script
 function postbuild() {
    cd $WORKDIR/$NAME-$VERSION
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr/bin
-   touch  ${BUILD_DATA_ROOT}/usr/bin/passwd
    make exec_prefix=${BUILD_DATA_ROOT}/usr install
-   make -C man install-man
+   touch  ${BUILD_DATA_ROOT}/usr/bin/passwd
+   make -C man install-man DESTDIR=/usr install
    pwconv
    grpconv
    mkdir -p ${BUILD_DATA_ROOT}/etc/default

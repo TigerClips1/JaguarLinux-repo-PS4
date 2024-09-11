@@ -52,8 +52,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd $WORKDIR/$NAME-$VERSION/build
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr/etc
-   mkdir -pv ${BUILD_DATA_ROOT}/etc/ld.so.conf.d
    cp -v ../../ld.so.conf  ${BUILD_DATA_ROOT}/usr/etc
    sed '/test-installation/s@$(PERL)@echo not running@' -i ../Makefile
    make  DESTDIR=${BUILD_DATA_ROOT}/usr install

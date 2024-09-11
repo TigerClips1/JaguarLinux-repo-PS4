@@ -41,7 +41,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr
    make  DESTDIR=${BUILD_DATA_ROOT}/usr install
    ln -sv vim ${BUILD_DATA_ROOT}/usr/bin/vi
     for L in  ${BUILD_DATA_ROOT}/usr/share/man/{,*/}man1/vim.1; do

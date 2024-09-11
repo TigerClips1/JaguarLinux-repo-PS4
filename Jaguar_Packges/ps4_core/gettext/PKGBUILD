@@ -36,6 +36,7 @@ function build() {
 }
 
 function check() {
+    cd "$WORKDIR/$NAME-$VERSION"
     make check
 }
 
@@ -43,7 +44,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr
     make  DESTDIR=${BUILD_DATA_ROOT}/usr install
 
    chmod -v 0755 ${BUILD_DATA_ROOT}/usr/lib/preloadable_libintl.so

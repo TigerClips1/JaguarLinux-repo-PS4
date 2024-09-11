@@ -43,9 +43,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-    mkdir -pv  ${BUILD_DATA_ROOT}/usr/bin
-    mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
     make DESTDIR=${BUILD_DATA_ROOT}/usr install
-    exec /usr/bin/bash --login
     return 0
 }

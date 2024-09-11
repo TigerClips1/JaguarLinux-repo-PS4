@@ -33,7 +33,9 @@ function build() {
     return 0
 }
 function check() {
+    cd "$WORKDIR/$NAME-$VERSION"
     make check
+    return 0
 }
 
 # Post build script

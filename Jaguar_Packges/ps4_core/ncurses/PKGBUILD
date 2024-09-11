@@ -46,9 +46,8 @@ function check() {
 
 # Post build script
 function postbuild() {
-   cd $WORKDIR/$NAME-$VERSION
-   mkdir -pv  ${BUILD_DATA_ROOT}/usr
-   make DESTDIR=$PWD/dest install
+   cd $WORKDIR/$NAME-$VERSION/dest
+   make DESTDIR=${BUILD_DATA_ROOT}/usr install
     install -vm755 dest/usr/lib/libncursesw.so.6.5 ${BUILD_DATA_ROOT}/usr/lib
     rm -v  dest/usr/lib/libncursesw.so.6.5
     sed -e 's/^#if.*XOPEN.*$/#if 1/' \
