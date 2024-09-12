@@ -45,7 +45,7 @@ function check() {
 function postbuild() {
    cd $WORKDIR/$NAME-$VERSION/build
 
-   make DESTDIR=${BUILD_DATA_ROOT}/usr install
+   make DESTDIR=${BUILD_DATA_ROOT} install
 
    install -v -dm755  ${BUILD_DATA_ROOT}/usr/share/doc/dejagnu-1.6.3
    install -v -m644   doc/dejagnu.{html,txt} ${BUILD_DATA_ROOT}/usr/share/doc/dejagnu-1.6.3

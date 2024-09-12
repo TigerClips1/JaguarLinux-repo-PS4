@@ -42,7 +42,7 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   make DESTDIR=${BUILD_DATA_ROOT}/usr install
+   make DESTDIR=${BUILD_DATA_ROOT} install
    ln -sv flex   ${BUILD_DATA_ROOT}/usr/bin/lex
    ln -sv flex.1 ${BUILD_DATA_ROOT}/usr/share/man/man1/lex.1
    return 0

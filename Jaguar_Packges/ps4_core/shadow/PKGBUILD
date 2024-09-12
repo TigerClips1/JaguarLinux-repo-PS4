@@ -50,9 +50,9 @@ function check() {
 # Post build script
 function postbuild() {
    cd $WORKDIR/$NAME-$VERSION
-   make exec_prefix=${BUILD_DATA_ROOT}/usr install
+   make exec_prefix=${BUILD_DATA_ROOT} install
    touch  ${BUILD_DATA_ROOT}/usr/bin/passwd
-   make -C man install-man DESTDIR=/usr install
+   make -C man install-man DESTDIR= install
    pwconv
    grpconv
    mkdir -p ${BUILD_DATA_ROOT}/etc/default

@@ -54,7 +54,7 @@ function postbuild() {
    cd $WORKDIR/$NAME-$VERSION/build
    cp -v ../../ld.so.conf  ${BUILD_DATA_ROOT}/usr/etc
    sed '/test-installation/s@$(PERL)@echo not running@' -i ../Makefile
-   make  DESTDIR=${BUILD_DATA_ROOT}/usr install
+   make  DESTDIR=${BUILD_DATA_ROOT} install
    sed '/RTLDLIST=/s@/usr@@g' -i ${BUILD_DATA_ROOT}/usr/bin/ldd
    make localedata/install-locales
    cp -v ../../nsswitch.conf ${BUILD_DATA_ROOT}/usr/etc

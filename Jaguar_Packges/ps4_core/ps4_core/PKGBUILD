@@ -114,4 +114,15 @@ function postbuild() {
       cp -arvf noclear.conf  $BUILD_DATA_ROOT/usr/etc/systemd/system/getty@tty1.service.d/
       cp -arvf foobar.conf  $BUILD_DATA_ROOT/usr/etc/systemd/system/
       cp -arvf maxuse.conf $BUILD_DATA_ROOT/usr/etc/systemd/coredump.conf.d/
+      install --directory --mode=0755 --owner=root --group=root $BUILD_DATA_ROOT/etc/profile.d
+      cp -arvf bash_completion.sh $BUILD_DATA_ROOT/etc/profile.d/
+      cp -arvf dircolors.sh $BUILD_DATA_ROOT/etc/profile.d/
+      cp -arvf extrapaths.sh $BUILD_DATA_ROOT/etc/profile.d/
+      cp -arvf readline.sh $BUILD_DATA_ROOT/etc/profile.d/
+      cp -arvf umask.sh $BUILD_DATA_ROOT/etc/profile.d/
+      cp -arvf i18n.sh $BUILD_DATA_ROOT/etc/profile.d/
+      cp -arvf bashrc $BUILD_DATA_ROOT/etc/
+      install --directory --mode=0755 --owner=root --group=root $BUILD_DATA_ROOT/etc/bash_completion.d
+
+
 }

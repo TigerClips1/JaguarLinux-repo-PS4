@@ -43,7 +43,7 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   make -C libelf DESTDIR=${BUILD_DATA_ROOT}/usr install
+   make -C libelf DESTDIR=${BUILD_DATA_ROOT} install
    install -vm644 config/libelf.pc ${BUILD_DATA_ROOT}/usr/lib/pkgconfig
    rm -v ${BUILD_DATA_ROOT}/usr/lib/libelf.a
     return 0

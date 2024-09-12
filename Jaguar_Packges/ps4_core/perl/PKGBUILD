@@ -55,7 +55,7 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   make  DESTDIR=${BUILD_DATA_ROOT}/usr install
+   make  DESTDIR=${BUILD_DATA_ROOT} install
    unset BUILD_ZLIB BUILD_BZIP2
 
     return 0

@@ -65,7 +65,7 @@ function postbuild() {
    #hopefully this works
    cd $WORKDIR/$NAME-$VERSION/build
 
-    make DESTDIR=${BUILD_DATA_ROOT}/usr install
+    make DESTDIR=${BUILD_DATA_ROOT} install
     ln -svr ${BUILD_DATA_ROOT}/usr/bin/cpp ${BUILD_DATA_ROOT}/usr/lib
     ln -sfv ../../libexec/gcc/$(gcc -dumpmachine)/14.2.0/liblto_plugin.so \
         ${BUILD_DATA_ROOT}/usr/lib/bfd-plugins/

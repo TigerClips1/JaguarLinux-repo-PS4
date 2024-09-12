@@ -54,7 +54,7 @@ function check() {
 function postbuild() {
    cd $WORKDIR/$NAME-$VERSION/build
    
-   make tooldir=${BUILD_DATA_ROOT}/usr install
+   make tooldir=${BUILD_DATA_ROOT} install
    rm -fv ${BUILD_DATA_ROOT}/usr/lib/lib{bfd,ctf,ctf-nobfd,gprofng,opcodes,sframe}.a
 
    return 0

@@ -41,7 +41,7 @@ function check() {
 function postbuild() {
    cd $WORKDIR/$NAME-$VERSION
 
-   make DESTDIR=${BUILD_DATA_ROOT}/usr install
+   make DESTDIR=${BUILD_DATA_ROOT} install
 
    ln -sv pkgconf   ${BUILD_DATA_ROOT}/usr/bin/pkg-config
    ln -sv pkgconf.1 ${BUILD_DATA_ROOT}/usr/share/man/man1/pkg-config.1

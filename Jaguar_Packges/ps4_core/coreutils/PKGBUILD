@@ -51,7 +51,7 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-    make  DESTDIR=${BUILD_DATA_ROOT}/usr install
+    make  DESTDIR=${BUILD_DATA_ROOT} install
     mv -v /usr/bin/chroot ${BUILD_DATA_ROOT}/usr/sbin
     mv -v /usr/share/man/man1/chroot.1 ${BUILD_DATA_ROOT}/usr/share/man/man8/chroot.8
     sed -i 's/"1"/"8"/' ${BUILD_DATA_ROOT}/usr/share/man/man8/chroot.8

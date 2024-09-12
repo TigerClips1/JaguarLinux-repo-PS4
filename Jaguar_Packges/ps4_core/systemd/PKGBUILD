@@ -62,7 +62,7 @@ function check() {
 # Post build script
 function postbuild() {
    cd $WORKDIR/$NAME-$VERSION/build
-   ninja DESTDIR=/usr install
+   ninja DESTDIR=${BUILD_DATA_ROOT} install
    tar -xvf ../../systemd-man-pages-256.4.tar.xz \
     --no-same-owner --strip-components=1   \
     -C ${BUILD_DATA_ROOT}/usr/share/man

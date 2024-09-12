@@ -45,7 +45,7 @@ function build() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   make  DESTDIR=${BUILD_DATA_ROOT}/usr install
+   make  DESTDIR=${BUILD_DATA_ROOT} install
    install -v -dm755 ${BUILD_DATA_ROOT}/usr/share/doc/python-3.12.5/html
    cp -arvf ../../pip.conf ${BUILD_DATA_ROOT}/usr/etc/
    tar --no-same-owner \

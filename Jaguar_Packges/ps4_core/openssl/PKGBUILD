@@ -45,7 +45,7 @@ function check() {
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
    sed -i '/INSTALL_LIBS/s/libcrypto.a libssl.a//' Makefile
-   make MANSUFFIX=ssl DESTDIR=${BUILD_DATA_ROOT}/usr install
+   make MANSUFFIX=ssl DESTDIR=${BUILD_DATA_ROOT} install
    mv -v  ${BUILD_DATA_ROOT}/usr/share/doc/openssl  ${BUILD_DATA_ROOT}/usr/share/doc/openssl-3.3.1
    cp -vfr doc/* ${BUILD_DATA_ROOT}/usr/share/doc/openssl-3.3.1
     return 0

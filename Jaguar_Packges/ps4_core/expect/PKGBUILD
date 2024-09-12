@@ -53,7 +53,7 @@ function check() {
 function postbuild() {
    cd $WORKDIR/$NAME-$VERSION/unix
 
-   make DESTDIR=${BUILD_DATA_ROOT}/usr install
+   make DESTDIR=${BUILD_DATA_ROOT} install
    ln -svf expect5.45.4/libexpect5.45.4.so ${BUILD_DATA_ROOT}/usr/libs
 
    return 0

@@ -2,7 +2,7 @@
 MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
 
 # Package information
-NAME="iproute"
+NAME="iproute2"
 VERSION="6.10.0"
 UPSTREAM=1
 DESC=" The IPRoute2 package contains programs for basic and advanced IPV4-based networking."
@@ -40,6 +40,7 @@ function check() {
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
     mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
+    mkdir -pv  ${BUILD_DATA_ROOT}/usr/sbin
     make SBINDIR= ${BUILD_DATA_ROOT}/usr/sbin install
     mkdir -pv             ${BUILD_DATA_ROOT}/usr/share/doc/iproute2-6.10.0
     cp -v COPYING README* ${BUILD_DATA_ROOT}/usr/share/doc/iproute2-6.10.0

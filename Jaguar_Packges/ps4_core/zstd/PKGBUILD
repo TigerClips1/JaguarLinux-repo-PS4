@@ -37,7 +37,7 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   make prefix=${BUILD_DATA_ROOT}/usr install
+   make prefix=${BUILD_DATA_ROOT} install
    rm -v ${BUILD_DATA_ROOT}/usr/lib/libzstd.a
    return 0
 }

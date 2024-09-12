@@ -37,6 +37,6 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   make BUILD_STATIC=no PREFIX=${BUILD_DATA_ROOT}/usr install
+   make BUILD_STATIC=no PREFIX=${BUILD_DATA_ROOT} install
    return 0
 }

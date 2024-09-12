@@ -39,7 +39,7 @@ function check() {
 # Post build script
 function postbuild() {
    cd $WORKDIR/$NAME-$VERSION
-   make prefix=${BUILD_DATA_ROOT}/usr lib=lib install
+   make prefix=${BUILD_DATA_ROOT} lib=lib install
 
    return 0
 }

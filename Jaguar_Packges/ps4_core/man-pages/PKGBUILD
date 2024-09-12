@@ -32,7 +32,7 @@ function build() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   make  DESTDIR=${BUILD_DATA_ROOT}/usr install
+   make  DESTDIR=${BUILD_DATA_ROOT} install
 
     return 0
 }

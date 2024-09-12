@@ -48,7 +48,7 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   make  DESTDIR=${BUILD_DATA_ROOT}/usr install
+   make  DESTDIR=${BUILD_DATA_ROOT} install
    rm -fv ${BUILD_DATA_ROOT}/usr/lib/{libcom_err,libe2p,libext2fs,libss}.a
    gunzip -v /usr/share/info/libext2fs.info.gz
    install-info --dir-file=/usr/share/info/dir ${BUILD_DATA_ROOT}/usr/share/info/libext2fs.info

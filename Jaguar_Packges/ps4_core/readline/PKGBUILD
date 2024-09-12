@@ -43,7 +43,7 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-   make  SHLIB_LIBS="-lncursesw" DESTDIR=${BUILD_DATA_ROOT}/usr install
+   make  SHLIB_LIBS="-lncursesw" DESTDIR=${BUILD_DATA_ROOT} install
    install -v -m644 doc/*.{ps,pdf,html,dvi} ${BUILD_DATA_ROOT}/usr/share/doc/readline-8.2.13
    return 0
 }

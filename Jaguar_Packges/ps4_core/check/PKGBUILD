@@ -40,7 +40,7 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
-    make  DESTDIR=${BUILD_DATA_ROOT}/usr install
+    make  DESTDIR=${BUILD_DATA_ROOT} install
     make  docdir=${BUILD_DATA_ROOT}/usr/share/doc/check-0.15.2 DESTDIR=${BUILD_DATA_ROOT}/usr install
     return 0
 }
