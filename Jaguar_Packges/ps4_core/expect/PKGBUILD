@@ -19,7 +19,7 @@ SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/expect5.45.4.tar.gz"
 
 # Prepare script
 function prepare() {
-    cd $WORKDIR/$NAME-$VERSION/unix
+    cd $WORKDIR/$NAME$VERSION
     python3 -c 'from pty import spawn; spawn(["echo", "ok"])'
     patch -Np1 -i ../expect-5.45.4-gcc14-1.patch
     ./configure --prefix=/usr           \
@@ -36,7 +36,7 @@ function prepare() {
 
 # Build script
 function build() {
-    cd $WORKDIR/$NAME-$VERSION/unix
+    cd $WORKDIR/$NAME$VERSION
     make
 
     
@@ -44,14 +44,14 @@ function build() {
 }
 
 function check() {
-    cd $WORKDIR/$NAME-$VERSION/unix
+    cd $WORKDIR/$NAME$VERSION/unix
     make test
     return 0
 } 
 
 # Post build script
 function postbuild() {
-   cd $WORKDIR/$NAME-$VERSION/unix
+   cd $WORKDIR/$NAME$VERSION
 
    make DESTDIR=${BUILD_DATA_ROOT} install
    ln -svf expect5.45.4/libexpect5.45.4.so ${BUILD_DATA_ROOT}/usr/libs
