@@ -17,6 +17,7 @@ SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/file-5.45.tar.gz")
 
 # Prepare script
 function prepare() {
+    cd $WORKDIR/$NAME$VERSION
     ./configure --prefix=/usr
     return 0
 }
