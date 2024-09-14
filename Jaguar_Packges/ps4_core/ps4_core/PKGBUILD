@@ -89,7 +89,7 @@ DEPENDS=(
         "procps-ng" 
         "util-linux" 
         "e2fsprogs" 
-        "ps4-linux" 
+        # "ps4-linux" 
         "ps4-linux-firmware"
 )
 
