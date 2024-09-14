@@ -5,7 +5,7 @@ MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
 NAME="expat"
 VERSION="2.6.2"
 UPSTREAM=1
-DESC=" The Expat package contains a stream oriented C library for parsing XML."
+DESC="The Expat package contains a stream oriented C library for parsing XML."
 GRPS=("core")
 URL="https://www.gnu.org/"
 LICENSES=("GPL")
@@ -13,7 +13,7 @@ DEPENDS=("ps4_core")
 
 
 # Source information
-SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/expect5.45.4.tar.gz")
+SRC=("https://lfs.gnlug.org/pub/lfs/lfs-packages/12.2/expat-2.6.2.tar.xz")
 
 
 # Prepare script

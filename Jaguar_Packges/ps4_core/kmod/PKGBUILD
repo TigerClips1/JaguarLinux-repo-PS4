@@ -45,6 +45,7 @@ function check() {
 # Post build script
 function postbuild() {
    cd "$WORKDIR/$NAME-$VERSION"
+   mkdir -pv ${BUILD_DATA_ROOT}/usr/sbin/
    make DESTDIR=${BUILD_DATA_ROOT} install
    for target in depmod insmod modinfo modprobe rmmod; do
         ln -sfv ../bin/kmod ${BUILD_DATA_ROOT}/usr/sbin/$target

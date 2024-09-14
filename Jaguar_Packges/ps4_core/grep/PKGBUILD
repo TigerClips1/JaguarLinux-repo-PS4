@@ -13,7 +13,7 @@ DEPENDS=("ps4_core")
 
 
 # Source information
-SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/bison-3.8.2.tar.xz")
+SRC=("https://lfs.gnlug.org/pub/lfs/lfs-packages/12.2/grep-3.11.tar.xz")
 
 
 # Prepare script

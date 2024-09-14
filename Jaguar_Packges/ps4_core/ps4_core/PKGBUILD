@@ -5,7 +5,7 @@ MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
 NAME="ps4_core"
 VERSION="1.0"
 UPSTREAM=1
-DESC="all the require core utils for ps4linux "
+DESC="all the require core utils for ps4linux"
 GRPS=("core")
 URL="https://github.com/TigerClips1"
 LICENSES=("GPL")
@@ -98,7 +98,7 @@ function postbuild() {
       mkdir -pv  ${BUILD_DATA_ROOT}/usr/etc  
       mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
       mkdir -pv  ${BUILD_DATA_ROOT}/etc/systemd/coredump.conf.d/ ${BUILD_DATA_ROOT}/etc/systemd/system/foobar.service.d/ ${BUILD_DATA_ROOT}/etc/systemd/system/getty@tty1.service.d ${BUILD_DATA_ROOT}/etc/udev/rules.d/
-      mkdir -pv $BUILD_DATA_ROOT/etc/systemd/network/
+      mkdir -pv $BUILD_DATA_ROOT/usr/etc/systemd/network/
       cp -arvf 10-ether0.link  $BUILD_DATA_ROOT/etc/systemd/network/
       cp -arvf 10-eth-dhcp.network $BUILD_DATA_ROOT/etc/systemd/network/
       cp -arvf resolv.conf $BUILD_DATA_ROOT/usr/etc

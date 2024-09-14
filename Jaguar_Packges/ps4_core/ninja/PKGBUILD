@@ -3,7 +3,7 @@ MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
 
 # Package information
 NAME="ninja"
-VERSION="1.12.1 "
+VERSION="1.12.1"
 UPSTREAM=1
 DESC="Ninja is a small build system with a focus on speed."
 GRPS=("core")
