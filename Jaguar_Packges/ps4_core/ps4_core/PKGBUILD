@@ -97,32 +97,32 @@ DEPENDS=(
 function postbuild() {
       mkdir -pv  ${BUILD_DATA_ROOT}/usr/etc  
       mkdir -pv  ${BUILD_DATA_ROOT}/usr/share
-      mkdir -pv  ${BUILD_DATA_ROOT}/etc/systemd/coredump.conf.d/ ${BUILD_DATA_ROOT}/etc/systemd/system/foobar.service.d/ ${BUILD_DATA_ROOT}/etc/systemd/system/getty@tty1.service.d ${BUILD_DATA_ROOT}/etc/udev/rules.d/
+      mkdir -pv  ${BUILD_DATA_ROOT}/etc/systemd/coredump.conf.d/ ${BUILD_DATA_ROOT}/usr/etc/systemd/system/foobar.service.d/ ${BUILD_DATA_ROOT}/usr/etc/systemd/system/getty@tty1.service.d ${BUILD_DATA_ROOT}/usr/etc/udev/rules.d/
       mkdir -pv $BUILD_DATA_ROOT/usr/etc/systemd/network/
-      cp -arvf 10-ether0.link  $BUILD_DATA_ROOT/etc/systemd/network/
-      cp -arvf 10-eth-dhcp.network $BUILD_DATA_ROOT/etc/systemd/network/
-      cp -arvf resolv.conf $BUILD_DATA_ROOT/usr/etc
-      cp -arvf hostname $BUILD_DATA_ROOT/usr/etc
-      cp -arvf hosts $BUILD_DATA_ROOT/usr/etc
-      cp -arvf 83-duplicate_devs.rules $BUILD_DATA_ROOT/usr/etc/udev/rules.d
-      cp -arvf adjtime $BUILD_DATA_ROOT/usr/etc
-      timedatectl set-local-rtc 1
-      cp -arvf vconsole.conf $BUILD_DATA_ROOT/usr/etc
-      localectl set-keymap us
-      cp -arvf  vimrc $BUILD_DATA_ROOT/usr/etc
-      cp -arvf  inputrc  $BUILD_DATA_ROOT/usr/etc
-      cp -arvf noclear.conf  $BUILD_DATA_ROOT/usr/etc/systemd/system/getty@tty1.service.d/
-      cp -arvf foobar.conf  $BUILD_DATA_ROOT/usr/etc/systemd/system/
-      cp -arvf maxuse.conf $BUILD_DATA_ROOT/usr/etc/systemd/coredump.conf.d/
-      install --directory --mode=0755 --owner=root --group=root $BUILD_DATA_ROOT/etc/profile.d
-      cp -arvf bash_completion.sh $BUILD_DATA_ROOT/etc/profile.d/
-      cp -arvf dircolors.sh $BUILD_DATA_ROOT/etc/profile.d/
-      cp -arvf extrapaths.sh $BUILD_DATA_ROOT/etc/profile.d/
-      cp -arvf readline.sh $BUILD_DATA_ROOT/etc/profile.d/
-      cp -arvf umask.sh $BUILD_DATA_ROOT/etc/profile.d/
-      cp -arvf i18n.sh $BUILD_DATA_ROOT/etc/profile.d/
-      cp -arvf bashrc $BUILD_DATA_ROOT/etc/
-      install --directory --mode=0755 --owner=root --group=root $BUILD_DATA_ROOT/etc/bash_completion.d
-
+      cp -arvf ../10-ether0.link  $BUILD_DATA_ROOT/usr/etc/systemd/network/
+      cp -arvf ../10-eth-dhcp.network $BUILD_DATA_ROOT/usr/etc/systemd/network/
+      cp -arvf ../resolv.conf $BUILD_DATA_ROOT/usr/etc
+      cp -arvf ../hostname $BUILD_DATA_ROOT/usr/etc
+      cp -arvf ../hosts $BUILD_DATA_ROOT/usr/etc
+      cp -arvf ../83-duplicate_devs.rules $BUILD_DATA_ROOT/usr/etc/udev/rules.d
+      cp -arvf ../adjtime $BUILD_DATA_ROOT/usr/etc
+      cp -arvf ../vconsole.conf $BUILD_DATA_ROOT/usr/etc
+      cp -arvf ../vimrc $BUILD_DATA_ROOT/usr/etc
+      cp -arvf ../inputrc  $BUILD_DATA_ROOT/usr/etc
+      cp -arvf ../issue  $BUILD_DATA_ROOT/usr/etc
+      cp -arvf ../noclear.conf  $BUILD_DATA_ROOT/usr/etc/systemd/system/getty@tty1.service.d/
+      cp -arvf ../foobar.conf  $BUILD_DATA_ROOT/usr/etc/systemd/system/
+      cp -arvf ../maxuse.conf $BUILD_DATA_ROOT/usr/etc/systemd/coredump.conf.d/
+      install --directory --mode=0755 --owner=root --group=root $BUILD_DATA_ROOT/usr/etc/profile.d
+      cp -arvf ../bash_completion.sh $BUILD_DATA_ROOT/usr/etc/profile.d/
+      cp -arvf ../dircolors.sh $BUILD_DATA_ROOT/usr/etc/profile.d/
+      cp -arvf ../extrapaths.sh $BUILD_DATA_ROOT/usr/etc/profile.d/
+      cp -arvf ../readline.sh $BUILD_DATA_ROOT/usr/etc/profile.d/
+      cp -arvf ../umask.sh $BUILD_DATA_ROOT/usr/etc/profile.d/
+      cp -arvf ../i18n.sh $BUILD_DATA_ROOT/usr/etc/profile.d/
+      cp -arvf ../bashrc $BUILD_DATA_ROOT/usr/etc/
+      install --directory --mode=0755 --owner=root --group=root $BUILD_DATA_ROOT/usr/etc/bash_completion.d
+      dircolors -p > $BUILD_DATA_ROOT/usr/etc/dircolors
+      return 0
 
 }

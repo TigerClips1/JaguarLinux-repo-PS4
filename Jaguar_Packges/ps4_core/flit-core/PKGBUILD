@@ -21,15 +21,16 @@ function prepare() {
     return 0
 }
 
-function check() {
-    return 0
-}
 
 # Build script
 function build() {
     cd "$WORKDIR/$PKGNAME-$VERSION"
     pip3 wheel -w dist --no-cache-dir --no-build-isolation --no-deps $PWD
 
+    return 0
+}
+
+function check() {
     return 0
 }
 
@@ -40,4 +41,4 @@ function postbuild() {
    mkdir -pv ${BUILD_DATA_ROOT}/usr
    pip3 install  --target ${BUILD_DATA_ROOT}/usr --no-index --no-user --find-links dist flit_core
 
-    
+}

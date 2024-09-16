@@ -25,6 +25,10 @@ function build() {
     return 0
 }
 
+function check() {
+    return 0
+}
+
 
 # Post build script
 function postbuild() {

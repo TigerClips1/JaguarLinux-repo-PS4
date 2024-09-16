@@ -4,6 +4,7 @@ MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
 # Package information
 NAME="python"
 VERSION="3.12.5"
+PKGNAME="Python"
 UPSTREAM=1
 DESC="The Python 3 package contains the Python development environment. It is useful for object-oriented programming, writing scripts, prototyping large programs, and developing entire applications. Python is an interpreted computer language."
 GRPS=("core")
@@ -18,7 +19,7 @@ SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/Python-3.12.5.tar.xz"
 
 # Prepare script
 function prepare() {
-    cd "$WORKDIR/$NAME-$VERSION"
+    cd "$WORKDIR/$PKGNAME-$VERSION"
     ./configure --prefix=/usr        \
             --enable-shared      \
             --with-system-expat  \
@@ -27,24 +28,25 @@ function prepare() {
     return 0
 }
 
-function check() {
-    cd "$WORKDIR/$NAME-$VERSION"
-    make test TESTOPTS=4"--timeout 120"
-    return 0
-}
-
 # Build script
 function build() {
-    cd "$WORKDIR/$NAME-$VERSION"
+    cd "$WORKDIR/$PKGNAME-$VERSION"
 
     make
 
     return 0
 }
 
+function check() {
+    cd "$WORKDIR/$PKGNAME-$VERSION"
+    make test TESTOPTS=4"--timeout 120"
+    return 0
+}
+
+
 # Post build script
 function postbuild() {
-   cd "$WORKDIR/$NAME-$VERSION"
+   cd "$WORKDIR/$PKGNAME-$VERSION"
    make  DESTDIR=${BUILD_DATA_ROOT} install
    install -v -dm755 ${BUILD_DATA_ROOT}/usr/share/doc/python-3.12.5/html
    cp -arvf ../../pip.conf ${BUILD_DATA_ROOT}/usr/etc/

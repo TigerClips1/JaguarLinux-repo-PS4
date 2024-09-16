@@ -20,7 +20,7 @@ function prepare() {
     cd "$WORKDIR/$NAME-$VERSION"
     export BUILD_ZLIB=False
     export BUILD_BZIP2=0
-    sh Configure -des                                          \
+    bash Configure -des                                          \
              -D prefix=/usr                                \
              -D vendorprefix=/usr                          \
              -D privlib=/usr/lib/perl5/5.40/core_perl      \

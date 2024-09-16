@@ -5,6 +5,7 @@ MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
 NAME="xml-parser"
 VERSION="2.47"
 UPSTREAM=1
+PKGNAME="XML-Parser"
 DESC="The XML::Parser module is a Perl interface to James Clark's XML parser, Expat."
 GRPS=("core")
 URL="https://github.com/libexpat/libexpat"
@@ -17,7 +18,7 @@ SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/XML-Parser-2.47.tar.gz
 
 # Prepare script
 function prepare() {
-    cd "$WORKDIR/$NAME-$VERSION"
+    cd "$WORKDIR/$PKGNAME-$VERSION"
     perl Makefile.PL
     
     return 0
@@ -25,7 +26,7 @@ function prepare() {
 
 # Build script
 function build() {
-    cd "$WORKDIR/$NAME-$VERSION"
+    cd "$WORKDIR/$PKGNAME-$VERSION"
 
     make
 
@@ -33,13 +34,13 @@ function build() {
 }
 
 function check() {
-     cd "$WORKDIR/$NAME-$VERSION"
+     cd "$WORKDIR/$PKGNAME-$VERSION"
     make test
 }
 
 # Post build script
 function postbuild() {
-   cd "$WORKDIR/$NAME-$VERSION"
+   cd "$WORKDIR/$PKGNAME-$VERSION"
    make  DESTDIR=${BUILD_DATA_ROOT} install
 
     return 0

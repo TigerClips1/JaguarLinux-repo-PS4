@@ -3,7 +3,7 @@ MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
 
 # Package information
 NAME="vim"
-VERSION="9.1.0660 "
+VERSION="9.1.0660"
 UPSTREAM=1
 DESC="The Vim package contains a powerful text editor."
 GRPS=("core")

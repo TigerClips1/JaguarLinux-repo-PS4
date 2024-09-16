@@ -17,6 +17,7 @@ SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/readline-8.2.13.tar.gz
 
 # Prepare script
 function prepare() {
+    cd "$WORKDIR/$NAME-$VERSION"
     sed -i '/MV.*old/d' Makefile.in
     sed -i '/{OLDSUFF}/c:' support/shlib-install
     sed -i 's/-Wl,-rpath,[^ ]*//' support/shobj-conf
