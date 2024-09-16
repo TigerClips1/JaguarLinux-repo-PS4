@@ -3,7 +3,7 @@ MAINTAINERS=("TigerClips1 <tigerclips1@ps4repo.site>")
 
 # Package information
 NAME="psmisc"
-VERSION="23.7s"
+VERSION="23.7"
 UPSTREAM=1
 DESC="The Psmisc package contains programs for displaying information about running processes."
 GRPS=("core")
