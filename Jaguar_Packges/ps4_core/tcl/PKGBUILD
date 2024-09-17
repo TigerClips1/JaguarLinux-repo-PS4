@@ -12,8 +12,8 @@ LICENSES=("GPL")
 DEPENDS=("ps4_core")
 
 # Source information
-SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/tcl8.6.14-src.tar.gz"
-     "http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/tcl8.6.14-html.tar.gz"
+SRC=("https://lfs.gnlug.org/pub/lfs/lfs-packages/12.2/tcl8.6.14-src.tar.gz"
+     "https://lfs.gnlug.org/pub/lfs/lfs-packages/12.2/tcl8.6.14-html.tar.gz"
     )
 
 

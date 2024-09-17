@@ -12,8 +12,8 @@ LICENSES=("GPL")
 DEPENDS=("ps4_core")
 
 # Source information
-SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/expect5.45.4.tar.gz"
-     "http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/expect-5.45.4-gcc14-1.patch"
+SRC=("https://lfs.gnlug.org/pub/lfs/lfs-packages/12.2/expect5.45.4.tar.gz"
+     "https://lfs.gnlug.org/pub/lfs/lfs-packages/12.2/expect-5.45.4-gcc14-1.patch"
     )
 
 

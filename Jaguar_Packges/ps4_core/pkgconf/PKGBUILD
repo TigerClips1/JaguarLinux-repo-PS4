@@ -12,7 +12,7 @@ LICENSES=("GPL")
 DEPENDS=("ps4_core")
 
 # Source information
-SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/pkgconf-2.3.0.tar.xz")
+SRC=("https://lfs.gnlug.org/pub/lfs/lfs-packages/12.2/pkgconf-2.3.0.tar.xz")
 
 
 # Prepare script

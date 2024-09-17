@@ -13,7 +13,7 @@ DEPENDS=("ps4_core")
 
 
 # Source information
-SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/inetutils-2.5.tar.xz")
+SRC=("https://lfs.gnlug.org/pub/lfs/lfs-packages/12.2/inetutils-2.5.tar.xz")
 
 
 # Prepare script

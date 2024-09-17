@@ -13,7 +13,7 @@ DEPENDS=("ps4_core")
 
 
 # Source information
-SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/gdbm-1.24.tar.gz")
+SRC=("https://lfs.gnlug.org/pub/lfs/lfs-packages/12.2/gdbm-1.24.tar.gz")
 
 
 # Prepare script

@@ -12,8 +12,8 @@ LICENSES=("GPL")
 DEPENDS=("ps4_core")
 
 # Source information
-SRC=("http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/systemd-256.4.tar.gz"
-    "http://ftp.lfs-matrix.net/pub/lfs/lfs-packages/12.2/systemd-man-pages-256.4.tar.xz")
+SRC=("https://lfs.gnlug.org/pub/lfs/lfs-packages/12.2/systemd-256.4.tar.gz"
+    "https://lfs.gnlug.org/pub/lfs/lfs-packages/12.2/systemd-man-pages-256.4.tar.xz")
 
 
 # Prepare script
