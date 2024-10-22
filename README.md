@@ -5,4 +5,4 @@ This Repo is liecnese under the GPL 3
  
 
 # you can help via PR to maintain these packages
-that would be helpful becuse making all these PKGBUILD file then compileing would take a long time 
+that would be helpful becuse making all these PS4BUILD file then compileing would take a long time 
